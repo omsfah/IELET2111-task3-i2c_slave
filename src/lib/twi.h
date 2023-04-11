@@ -47,7 +47,7 @@ void TWI_TARGET_registerStopCallback(twi_stop_callback_t function);
 
 /**************** TODO: docstring
  */
-void TWI0_CONTROLLER_init(twi_address_t target_address);
+void TWI0_TARGET_init(twi_address_t target_address);
 
 
 /**************** function TWI0_CONTROLLER_init
@@ -61,7 +61,7 @@ static void TWI0_CONTROLLER_init(void);
  * @param uint8_t twi_address   7 bit twi address
  * @param uint8_t byte          data
  */
-static void TWI0_CONTROLLER_sendByte(twi_address_t twi_address, uint8_t byte);
+void TWI0_CONTROLLER_sendByte(twi_address_t twi_address, uint8_t byte);
 
 
 /**************** function TWI0_wait

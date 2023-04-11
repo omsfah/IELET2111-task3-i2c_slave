@@ -1,6 +1,11 @@
 #include "twi.h"
 
 
+twi_write_callback_t TWI0_TARGET_onWrite = 0;
+twi_read_callback_t TWI0_TARGET_onRead = 0;
+twi_stop_callback_t TWI0_TARGET_onStop = 0;
+
+
 static void TWI0_wait(void) {
     /* Wait forever while the TWI bus is not ready or there is an error */
     while (!(TWI0_IS_CLOCKHELD() || TWI0_IS_BUSERR() || TWI0_IS_ARBLOST() || TWI0_IS_BUSBUSY())) {
@@ -29,7 +34,7 @@ static void TWI0_busInit(void) {
 }
 
 
-static void TWI0_TARGET_init(twi_address_t target_address) {
+void TWI0_TARGET_init(twi_address_t target_address) {
     /* Initialize device as TWI target */
 
     TWI0_busInit();
@@ -38,9 +43,9 @@ static void TWI0_TARGET_init(twi_address_t target_address) {
     TWI0.SADDR = target_address << 1;
 
     // Instantiate callback functions with NULL pointers
-    twi_write_callback_t TWI0_TARGET_onWrite = NULL;
-    twi_read_callback_t TWI0_TARGET_onRead = NULL;
-    twi_stop_callback_t TWI0_TARGET_onStop = NULL;
+    twi_write_callback_t TWI0_TARGET_onWrite = 0;
+    twi_read_callback_t TWI0_TARGET_onRead = 0;
+    twi_stop_callback_t TWI0_TARGET_onStop = 0;
 
     // Set up target control register
     TWI0.SCTRLA |= TWI_ENABLE_bm;           // Mark device as TWI target
@@ -138,7 +143,7 @@ static void TWI0_CONTROLLER_init(void) {
 }
 
 
-static void TWI0_CONTROLLER_sendByte(twi_address_t twi_address, uint8_t byte) {
+void TWI0_CONTROLLER_sendByte(twi_address_t twi_address, uint8_t byte) {
     /* Send one byte to over TWI */
     
     // Construct the address packet. Last bit is the direction bit.
