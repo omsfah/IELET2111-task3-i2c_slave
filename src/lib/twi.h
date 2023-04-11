@@ -13,6 +13,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <stdbool.h>
 
 
 // Macros for parsing the TWI0.MSTATUS register flags
@@ -24,29 +25,47 @@
 
 #define TWI_DIRECTION_OUT 0
 #define TWI_DIRECTION_IN 1
+#define TWI_WRITE false
+#define TWI_READ true
 
 /**************** typedef twi_address_t
- * 7 bit TWI address. First bit (MSB) is discarded (-xxx xxxx)
+ * @brief 7 bit TWI address. First bit (MSB) is discarded (-xxx xxxx)
  */
-typedef uint8_t twi_address_t 
+typedef uint8_t twi_address_t;
 
 
-/**************** function TWI0_init
- * Initialize TWI bus
+/**************** TODO: docstring
  */
-static void TWI0_init(void);
+typedef void (*twi_write_callback_t)(uint8_t);
+typedef uint8_t (*twi_read_callback_t)(void);
+typedef void (*twi_stop_callback_t)(void);
+
+void TWI_TARGET_registerWriteCallback(twi_write_callback_t function);
+void TWI_TARGET_registerReadCallback(twi_read_callback_t function);
+void TWI_TARGET_registerStopCallback(twi_stop_callback_t function);
 
 
-/**************** function TWI0_sendByte
- * Send one byte over TWI
+/**************** TODO: docstring
+ */
+void TWI0_CONTROLLER_init(twi_address_t target_address);
+
+
+/**************** function TWI0_CONTROLLER_init
+ * @brief Initialize TWI controller
+ */
+static void TWI0_CONTROLLER_init(void);
+
+
+/**************** function TWI0_CONTROLLER_sendByte
+ * @brief Send one byte over TWI
  * @param uint8_t twi_address   7 bit twi address
  * @param uint8_t byte          data
  */
-static void TWI0_sendByte(twi_address_t twi_address, uint8_t byte);
+static void TWI0_CONTROLLER_sendByte(twi_address_t twi_address, uint8_t byte);
 
 
 /**************** function TWI0_wait
- * While TWI bus is not ready or is reporting errors, wait forever
+ * @brief While TWI bus is not ready or is reporting errors, wait forever
  */
 static void TWI0_wait(void);
 
