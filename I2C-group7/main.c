@@ -1,3 +1,6 @@
+// File structure:
+// lib:
+
 #define F_CPU 4000000UL
 
 #include <avr/io.h>
@@ -11,6 +14,7 @@
 
 #include "hardware/init.h"
 #include "hardware/read.h"
+
 
 #include "protocol/I2C.h"
 
