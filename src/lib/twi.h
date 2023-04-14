@@ -50,6 +50,10 @@ void TWI_TARGET_registerStopCallback(twi_stop_callback_t function);
 void TWI0_TARGET_init(twi_address_t target_address);
 
 
+/**************** TODO: docstring
+ */
+void TWI0_TARGET_updateAddress(twi_address_t target_address);
+
 /**************** function TWI0_CONTROLLER_init
  * @brief Initialize TWI controller
  */

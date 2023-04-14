@@ -33,6 +33,11 @@ static void TWI0_busInit(void) {
                                     // timing parameters, but 15 works.
 }
 
+void TWI0_TARGET_updateAddress(twi_address_t target_address) {
+    /* Update target address */
+    TWI0.SADDR = target_address << 1;
+}
+
 
 void TWI0_TARGET_init(twi_address_t target_address) {
     /* Initialize device as TWI target */
