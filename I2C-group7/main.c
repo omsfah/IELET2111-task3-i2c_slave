@@ -1,5 +1,5 @@
 // File structure:
-// lib:
+// lib: entioentsd
 
 #define F_CPU 4000000UL
 
