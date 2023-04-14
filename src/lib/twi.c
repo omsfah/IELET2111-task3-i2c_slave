@@ -58,8 +58,11 @@ void TWI0_TARGET_init(twi_address_t target_address) {
     TWI0.SCTRLA |= TWI_APIEN_bm;            // Enable Address/stop interrupts
     TWI0.SCTRLA |= TWI_PIEN_bm;             // Enable ?????
 
-    //Configure status register
+    // Configure status register
     TWI0.SSTATUS = TWI_BUSSTATE_IDLE_gc;    // Force TWI bus to IDLE state
+
+    // Enable interrupts
+    sei();
 }
 
 

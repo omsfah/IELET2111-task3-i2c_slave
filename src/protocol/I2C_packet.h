@@ -15,12 +15,12 @@
 
 
 // Struct typedef for I2C packet
-typedef struct i2c_status_packet_t {
+typedef struct {
     uint16_t externally_supplied_voltage;
     uint16_t regulated_mcu_voltage;
     uint16_t fan_speed;
     uint32_t uptime;
-};
+} i2c_status_packet_t;
 
 
 #endif

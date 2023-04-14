@@ -24,4 +24,8 @@ void I2C_setAddress(twi_address_t I2C_address);
 
 // I2C status function that returns I2C_status_t struct?
 
+// Make transmission buffer available?
+extern volatile i2c_status_packet_t incoming_buffer;
+extern volatile i2c_status_packet_t outgoing_buffer;
+
 #endif
