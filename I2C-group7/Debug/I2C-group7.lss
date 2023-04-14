@@ -1,0 +1,693 @@
+
+I2C-group7.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         0000001c  00804000  000003b6  0000044a  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         000003b6  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          0000000c  0080401c  0080401c  00000466  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  00000466  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000498  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000140  00000000  00000000  000004d8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000043aa  00000000  00000000  00000618  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 0000340b  00000000  00000000  000049c2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000b46  00000000  00000000  00007dcd  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000258  00000000  00000000  00008914  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    00001dda  00000000  00000000  00008b6c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    000002f5  00000000  00000000  0000a946  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 000000f0  00000000  00000000  0000ac3b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 7a 00 	jmp	0xf4	; 0xf4 <__ctors_end>
+   4:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+   8:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+   c:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  10:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  14:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  18:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  1c:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  20:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  24:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  28:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  2c:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  30:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  34:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  38:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  3c:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  40:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  44:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  48:	0c 94 ec 00 	jmp	0x1d8	; 0x1d8 <__vector_18>
+  4c:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  50:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  54:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  58:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  5c:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  60:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  64:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  68:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  6c:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  70:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  74:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  78:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  7c:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  80:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  84:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  88:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  8c:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  90:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  94:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  98:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  9c:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  a0:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  a4:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  a8:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  ac:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  b0:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  b4:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  b8:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  bc:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  c0:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  c4:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  c8:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  cc:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  d0:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  d4:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  d8:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  dc:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  e0:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  e4:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  e8:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  ec:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+  f0:	0c 94 99 00 	jmp	0x132	; 0x132 <__bad_interrupt>
+
+000000f4 <__ctors_end>:
+  f4:	11 24       	eor	r1, r1
+  f6:	1f be       	out	0x3f, r1	; 63
+  f8:	cf ef       	ldi	r28, 0xFF	; 255
+  fa:	cd bf       	out	0x3d, r28	; 61
+  fc:	df e7       	ldi	r29, 0x7F	; 127
+  fe:	de bf       	out	0x3e, r29	; 62
+
+00000100 <__do_copy_data>:
+ 100:	10 e4       	ldi	r17, 0x40	; 64
+ 102:	a0 e0       	ldi	r26, 0x00	; 0
+ 104:	b0 e4       	ldi	r27, 0x40	; 64
+ 106:	e6 eb       	ldi	r30, 0xB6	; 182
+ 108:	f3 e0       	ldi	r31, 0x03	; 3
+ 10a:	00 e0       	ldi	r16, 0x00	; 0
+ 10c:	0b bf       	out	0x3b, r16	; 59
+ 10e:	02 c0       	rjmp	.+4      	; 0x114 <__do_copy_data+0x14>
+ 110:	07 90       	elpm	r0, Z+
+ 112:	0d 92       	st	X+, r0
+ 114:	ac 31       	cpi	r26, 0x1C	; 28
+ 116:	b1 07       	cpc	r27, r17
+ 118:	d9 f7       	brne	.-10     	; 0x110 <__do_copy_data+0x10>
+
+0000011a <__do_clear_bss>:
+ 11a:	20 e4       	ldi	r18, 0x40	; 64
+ 11c:	ac e1       	ldi	r26, 0x1C	; 28
+ 11e:	b0 e4       	ldi	r27, 0x40	; 64
+ 120:	01 c0       	rjmp	.+2      	; 0x124 <.do_clear_bss_start>
+
+00000122 <.do_clear_bss_loop>:
+ 122:	1d 92       	st	X+, r1
+
+00000124 <.do_clear_bss_start>:
+ 124:	a8 32       	cpi	r26, 0x28	; 40
+ 126:	b2 07       	cpc	r27, r18
+ 128:	e1 f7       	brne	.-8      	; 0x122 <.do_clear_bss_loop>
+ 12a:	0e 94 70 01 	call	0x2e0	; 0x2e0 <main>
+ 12e:	0c 94 d9 01 	jmp	0x3b2	; 0x3b2 <_exit>
+
+00000132 <__bad_interrupt>:
+ 132:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000136 <BUTTON_BUILTIN_init>:
+
+void BUTTON_BUILTIN_awaitPress(void) {
+    // Halt until the builting button is pressed
+    while (PORTB.IN & PIN2_bm) {
+    }
+}
+ 136:	e0 e2       	ldi	r30, 0x20	; 32
+ 138:	f4 e0       	ldi	r31, 0x04	; 4
+ 13a:	84 e0       	ldi	r24, 0x04	; 4
+ 13c:	82 83       	std	Z+2, r24	; 0x02
+ 13e:	82 89       	ldd	r24, Z+18	; 0x12
+ 140:	88 60       	ori	r24, 0x08	; 8
+ 142:	82 8b       	std	Z+18, r24	; 0x12
+ 144:	08 95       	ret
+
+00000146 <LED_BUILTIN_init>:
+
+void LED_BUILTIN_init(void) {
+    // Initialize builtin LED on PB3
+    PORTB.DIRSET = PIN3_bm;
+ 146:	88 e0       	ldi	r24, 0x08	; 8
+ 148:	80 93 21 04 	sts	0x0421, r24	; 0x800421 <__TEXT_REGION_LENGTH__+0x7e0421>
+ 14c:	08 95       	ret
+
+0000014e <LED_BUILTIN_toggle>:
+}
+
+void LED_BUILTIN_toggle(void) {
+    // Toggle builtin LED on PB3 
+    PORTB.OUT ^= PIN3_bm;
+ 14e:	e0 e2       	ldi	r30, 0x20	; 32
+ 150:	f4 e0       	ldi	r31, 0x04	; 4
+ 152:	94 81       	ldd	r25, Z+4	; 0x04
+ 154:	88 e0       	ldi	r24, 0x08	; 8
+ 156:	89 27       	eor	r24, r25
+ 158:	84 83       	std	Z+4, r24	; 0x04
+ 15a:	08 95       	ret
+
+0000015c <TWI0_busInit>:
+
+static void TWI0_busInit(void) {
+    /* Initialize TWI bus */
+
+    // Enable TWI pins
+    PORTA.DIRSET = PIN2_bm;     // SDA
+ 15c:	e0 e0       	ldi	r30, 0x00	; 0
+ 15e:	f4 e0       	ldi	r31, 0x04	; 4
+ 160:	84 e0       	ldi	r24, 0x04	; 4
+ 162:	81 83       	std	Z+1, r24	; 0x01
+    PORTA.DIRSET = PIN3_bm;     // SCL
+ 164:	88 e0       	ldi	r24, 0x08	; 8
+ 166:	81 83       	std	Z+1, r24	; 0x01
+    
+    // Simultaneously enable internal pull-up for PA2 and PA3
+    PORTA.PINCONFIG = PORT_PULLUPEN_bm;
+ 168:	83 87       	std	Z+11, r24	; 0x0b
+    PORTA.PINCTRLUPD = PIN2_bm | PIN3_bm;
+ 16a:	9c e0       	ldi	r25, 0x0C	; 12
+ 16c:	94 87       	std	Z+12, r25	; 0x0c
+    
+    // Configure SDA
+    TWI0.CTRLA = TWI_SDASETUP_4CYC_gc | TWI_SDAHOLD_300NS_gc;
+ 16e:	e0 e0       	ldi	r30, 0x00	; 0
+ 170:	f9 e0       	ldi	r31, 0x09	; 9
+ 172:	80 83       	st	Z, r24
+    
+    TWI0.CTRLA &= ~TWI_FMPEN_bm;    // Disable fast mode
+ 174:	80 81       	ld	r24, Z
+ 176:	8d 7f       	andi	r24, 0xFD	; 253
+ 178:	80 83       	st	Z, r24
+    TWI0.MBAUD = (uint8_t) 15;      // Ideally we should calculate baud rate from F_CPU and other
+ 17a:	8f e0       	ldi	r24, 0x0F	; 15
+ 17c:	86 83       	std	Z+6, r24	; 0x06
+ 17e:	08 95       	ret
+
+00000180 <TWI0_TARGET_updateAddress>:
+                                    // timing parameters, but 15 works.
+}
+
+void TWI0_TARGET_updateAddress(twi_address_t target_address) {
+    /* Update target address */
+    TWI0.SADDR = target_address << 1;
+ 180:	88 0f       	add	r24, r24
+ 182:	80 93 0c 09 	sts	0x090C, r24	; 0x80090c <__TEXT_REGION_LENGTH__+0x7e090c>
+ 186:	08 95       	ret
+
+00000188 <TWI0_TARGET_init>:
+}
+
+
+void TWI0_TARGET_init(twi_address_t target_address) {
+ 188:	cf 93       	push	r28
+ 18a:	c8 2f       	mov	r28, r24
+    /* Initialize device as TWI target */
+
+    TWI0_busInit();
+ 18c:	0e 94 ae 00 	call	0x15c	; 0x15c <TWI0_busInit>
+
+    // Register target address
+    TWI0.SADDR = target_address << 1;
+ 190:	cc 0f       	add	r28, r28
+ 192:	e0 e0       	ldi	r30, 0x00	; 0
+ 194:	f9 e0       	ldi	r31, 0x09	; 9
+ 196:	c4 87       	std	Z+12, r28	; 0x0c
+    twi_write_callback_t TWI0_TARGET_onWrite = 0;
+    twi_read_callback_t TWI0_TARGET_onRead = 0;
+    twi_stop_callback_t TWI0_TARGET_onStop = 0;
+
+    // Set up target control register
+    TWI0.SCTRLA |= TWI_ENABLE_bm;           // Mark device as TWI target
+ 198:	81 85       	ldd	r24, Z+9	; 0x09
+ 19a:	81 60       	ori	r24, 0x01	; 1
+ 19c:	81 87       	std	Z+9, r24	; 0x09
+    TWI0.SCTRLA |= TWI_DIEN_bm;             // Enable data interrupts
+ 19e:	81 85       	ldd	r24, Z+9	; 0x09
+ 1a0:	80 68       	ori	r24, 0x80	; 128
+ 1a2:	81 87       	std	Z+9, r24	; 0x09
+    TWI0.SCTRLA |= TWI_APIEN_bm;            // Enable Address/stop interrupts
+ 1a4:	81 85       	ldd	r24, Z+9	; 0x09
+ 1a6:	80 64       	ori	r24, 0x40	; 64
+ 1a8:	81 87       	std	Z+9, r24	; 0x09
+    TWI0.SCTRLA |= TWI_PIEN_bm;             // Enable ?????
+ 1aa:	81 85       	ldd	r24, Z+9	; 0x09
+ 1ac:	80 62       	ori	r24, 0x20	; 32
+ 1ae:	81 87       	std	Z+9, r24	; 0x09
+
+    // Configure status register
+    TWI0.SSTATUS = TWI_BUSSTATE_IDLE_gc;    // Force TWI bus to IDLE state
+ 1b0:	81 e0       	ldi	r24, 0x01	; 1
+ 1b2:	83 87       	std	Z+11, r24	; 0x0b
+
+    // Enable interrupts
+    sei();
+ 1b4:	78 94       	sei
+}
+ 1b6:	cf 91       	pop	r28
+ 1b8:	08 95       	ret
+
+000001ba <TWI_TARGET_registerWriteCallback>:
+
+
+void TWI_TARGET_registerWriteCallback(twi_write_callback_t function) {
+    /* Register write callback function for TWI TARGET */
+    TWI0_TARGET_onWrite = function;
+ 1ba:	80 93 20 40 	sts	0x4020, r24	; 0x804020 <TWI0_TARGET_onWrite>
+ 1be:	90 93 21 40 	sts	0x4021, r25	; 0x804021 <TWI0_TARGET_onWrite+0x1>
+ 1c2:	08 95       	ret
+
+000001c4 <TWI_TARGET_registerReadCallback>:
+}
+
+
+void TWI_TARGET_registerReadCallback(twi_read_callback_t function) {
+    /* Register read callback function for TWI TARGET */
+    TWI0_TARGET_onRead = function;
+ 1c4:	80 93 1e 40 	sts	0x401E, r24	; 0x80401e <TWI0_TARGET_onRead>
+ 1c8:	90 93 1f 40 	sts	0x401F, r25	; 0x80401f <TWI0_TARGET_onRead+0x1>
+ 1cc:	08 95       	ret
+
+000001ce <TWI_TARGET_registerStopCallback>:
+}
+
+
+void TWI_TARGET_registerStopCallback(twi_stop_callback_t function) {
+    /* Register stop callback function for TWI TARGET */
+    TWI0_TARGET_onStop = function;
+ 1ce:	80 93 1c 40 	sts	0x401C, r24	; 0x80401c <__data_end>
+ 1d2:	90 93 1d 40 	sts	0x401D, r25	; 0x80401d <__data_end+0x1>
+ 1d6:	08 95       	ret
+
+000001d8 <__vector_18>:
+}
+
+
+ISR(TWI0_TWIS_vect) {
+ 1d8:	1f 92       	push	r1
+ 1da:	0f 92       	push	r0
+ 1dc:	0f b6       	in	r0, 0x3f	; 63
+ 1de:	0f 92       	push	r0
+ 1e0:	11 24       	eor	r1, r1
+ 1e2:	0b b6       	in	r0, 0x3b	; 59
+ 1e4:	0f 92       	push	r0
+ 1e6:	2f 93       	push	r18
+ 1e8:	3f 93       	push	r19
+ 1ea:	4f 93       	push	r20
+ 1ec:	5f 93       	push	r21
+ 1ee:	6f 93       	push	r22
+ 1f0:	7f 93       	push	r23
+ 1f2:	8f 93       	push	r24
+ 1f4:	9f 93       	push	r25
+ 1f6:	af 93       	push	r26
+ 1f8:	bf 93       	push	r27
+ 1fa:	ef 93       	push	r30
+ 1fc:	ff 93       	push	r31
+    /* General ISR for TWI target */
+
+    // TODO: is it possible to break this up into more atomic ISRs?
+
+    // Check if data interrupt flag is high
+    if (TWI0.SSTATUS & TWI_DIF_bm) {
+ 1fe:	80 91 0b 09 	lds	r24, 0x090B	; 0x80090b <__TEXT_REGION_LENGTH__+0x7e090b>
+ 202:	88 23       	and	r24, r24
+ 204:	04 f5       	brge	.+64     	; 0x246 <__EEPROM_REGION_LENGTH__+0x46>
+
+        // Prepare a data buffer
+        uint8_t data = 0x00;
+
+        // Scenario A: Write data (Controller -> Target)
+        if (((TWI0.SSTATUS & TWI_DIR_bm) >> TWI_DIR_bp) == TWI_WRITE) {
+ 206:	80 91 0b 09 	lds	r24, 0x090B	; 0x80090b <__TEXT_REGION_LENGTH__+0x7e090b>
+ 20a:	81 fd       	sbrc	r24, 1
+ 20c:	0a c0       	rjmp	.+20     	; 0x222 <__EEPROM_REGION_LENGTH__+0x22>
+            data = TWI0.SDATA;
+ 20e:	80 91 0d 09 	lds	r24, 0x090D	; 0x80090d <__TEXT_REGION_LENGTH__+0x7e090d>
+
+            // If write callback function exists, run it on the data
+            if (TWI0_TARGET_onWrite) {
+ 212:	e0 91 20 40 	lds	r30, 0x4020	; 0x804020 <TWI0_TARGET_onWrite>
+ 216:	f0 91 21 40 	lds	r31, 0x4021	; 0x804021 <TWI0_TARGET_onWrite+0x1>
+ 21a:	30 97       	sbiw	r30, 0x00	; 0
+ 21c:	69 f0       	breq	.+26     	; 0x238 <__EEPROM_REGION_LENGTH__+0x38>
+                TWI0_TARGET_onWrite(data);
+ 21e:	09 95       	icall
+ 220:	0b c0       	rjmp	.+22     	; 0x238 <__EEPROM_REGION_LENGTH__+0x38>
+        }
+
+        // Scenario B: Read data (Controller <- Target)
+        else { // TODO: add proper if clause instead of else
+            // If write callback function exists, run it on the data
+            if (TWI0_TARGET_onRead) {
+ 222:	e0 91 1e 40 	lds	r30, 0x401E	; 0x80401e <TWI0_TARGET_onRead>
+ 226:	f0 91 1f 40 	lds	r31, 0x401F	; 0x80401f <TWI0_TARGET_onRead+0x1>
+ 22a:	30 97       	sbiw	r30, 0x00	; 0
+ 22c:	11 f0       	breq	.+4      	; 0x232 <__EEPROM_REGION_LENGTH__+0x32>
+                data = TWI0_TARGET_onRead();
+ 22e:	09 95       	icall
+ 230:	01 c0       	rjmp	.+2      	; 0x234 <__EEPROM_REGION_LENGTH__+0x34>
+
+    // Check if data interrupt flag is high
+    if (TWI0.SSTATUS & TWI_DIF_bm) {
+
+        // Prepare a data buffer
+        uint8_t data = 0x00;
+ 232:	80 e0       	ldi	r24, 0x00	; 0
+            // If write callback function exists, run it on the data
+            if (TWI0_TARGET_onRead) {
+                data = TWI0_TARGET_onRead();
+            }
+
+            TWI0.SDATA = data;
+ 234:	80 93 0d 09 	sts	0x090D, r24	; 0x80090d <__TEXT_REGION_LENGTH__+0x7e090d>
+        }
+
+        TWI0.SCTRLB |= TWI_ACKACT_ACK_gc;
+ 238:	e0 e0       	ldi	r30, 0x00	; 0
+ 23a:	f9 e0       	ldi	r31, 0x09	; 9
+ 23c:	82 85       	ldd	r24, Z+10	; 0x0a
+ 23e:	82 87       	std	Z+10, r24	; 0x0a
+        TWI0.SCTRLB |= TWI_SCMD_RESPONSE_gc;
+ 240:	82 85       	ldd	r24, Z+10	; 0x0a
+ 242:	83 60       	ori	r24, 0x03	; 3
+ 244:	82 87       	std	Z+10, r24	; 0x0a
+    }
+
+    // Check if address detection flag is high
+    if (TWI0.SSTATUS & TWI_AP_ADR_gc) {
+ 246:	80 91 0b 09 	lds	r24, 0x090B	; 0x80090b <__TEXT_REGION_LENGTH__+0x7e090b>
+ 24a:	80 ff       	sbrs	r24, 0
+ 24c:	1b c0       	rjmp	.+54     	; 0x284 <__EEPROM_REGION_LENGTH__+0x84>
+
+        // Address match, send ACK
+        if (TWI0.SSTATUS & TWI_AP_ADR_gc) {
+ 24e:	80 91 0b 09 	lds	r24, 0x090B	; 0x80090b <__TEXT_REGION_LENGTH__+0x7e090b>
+ 252:	80 ff       	sbrs	r24, 0
+ 254:	08 c0       	rjmp	.+16     	; 0x266 <__EEPROM_REGION_LENGTH__+0x66>
+            TWI0.SCTRLB |= TWI_ACKACT_ACK_gc;
+ 256:	e0 e0       	ldi	r30, 0x00	; 0
+ 258:	f9 e0       	ldi	r31, 0x09	; 9
+ 25a:	82 85       	ldd	r24, Z+10	; 0x0a
+ 25c:	82 87       	std	Z+10, r24	; 0x0a
+            TWI0.SCTRLB |= TWI_SCMD_RESPONSE_gc;
+ 25e:	82 85       	ldd	r24, Z+10	; 0x0a
+ 260:	83 60       	ori	r24, 0x03	; 3
+ 262:	82 87       	std	Z+10, r24	; 0x0a
+ 264:	0f c0       	rjmp	.+30     	; 0x284 <__EEPROM_REGION_LENGTH__+0x84>
+        }
+
+        else { //TODO: add proper if clause instead of else
+            if (TWI0_TARGET_onStop) {
+ 266:	e0 91 1c 40 	lds	r30, 0x401C	; 0x80401c <__data_end>
+ 26a:	f0 91 1d 40 	lds	r31, 0x401D	; 0x80401d <__data_end+0x1>
+ 26e:	30 97       	sbiw	r30, 0x00	; 0
+ 270:	09 f0       	breq	.+2      	; 0x274 <__EEPROM_REGION_LENGTH__+0x74>
+                TWI0_TARGET_onStop();
+ 272:	09 95       	icall
+            }
+
+            TWI0.SCTRLB |= TWI_ACKACT_NACK_gc;
+ 274:	e0 e0       	ldi	r30, 0x00	; 0
+ 276:	f9 e0       	ldi	r31, 0x09	; 9
+ 278:	82 85       	ldd	r24, Z+10	; 0x0a
+ 27a:	84 60       	ori	r24, 0x04	; 4
+ 27c:	82 87       	std	Z+10, r24	; 0x0a
+            TWI0.SCTRLB |= TWI_SCMD_COMPTRANS_gc;
+ 27e:	82 85       	ldd	r24, Z+10	; 0x0a
+ 280:	82 60       	ori	r24, 0x02	; 2
+ 282:	82 87       	std	Z+10, r24	; 0x0a
+        }
+    }
+}
+ 284:	ff 91       	pop	r31
+ 286:	ef 91       	pop	r30
+ 288:	bf 91       	pop	r27
+ 28a:	af 91       	pop	r26
+ 28c:	9f 91       	pop	r25
+ 28e:	8f 91       	pop	r24
+ 290:	7f 91       	pop	r23
+ 292:	6f 91       	pop	r22
+ 294:	5f 91       	pop	r21
+ 296:	4f 91       	pop	r20
+ 298:	3f 91       	pop	r19
+ 29a:	2f 91       	pop	r18
+ 29c:	0f 90       	pop	r0
+ 29e:	0b be       	out	0x3b, r0	; 59
+ 2a0:	0f 90       	pop	r0
+ 2a2:	0f be       	out	0x3f, r0	; 63
+ 2a4:	0f 90       	pop	r0
+ 2a6:	1f 90       	pop	r1
+ 2a8:	18 95       	reti
+
+000002aa <USART3_init>:
+#include "usart.h"
+
+
+void USART3_init(void) {
+    // Initialize serial communication on USART3
+    PORTB.DIRSET = PIN0_bm;  // TX-pin as output
+ 2aa:	e0 e2       	ldi	r30, 0x20	; 32
+ 2ac:	f4 e0       	ldi	r31, 0x04	; 4
+ 2ae:	81 e0       	ldi	r24, 0x01	; 1
+ 2b0:	81 83       	std	Z+1, r24	; 0x01
+    PORTB.DIRCLR = PIN1_bm;  // RX-pin as input
+ 2b2:	82 e0       	ldi	r24, 0x02	; 2
+ 2b4:	82 83       	std	Z+2, r24	; 0x02
+    USART3.BAUD = USART3_BAUD_RATE(9600);
+ 2b6:	e0 e6       	ldi	r30, 0x60	; 96
+ 2b8:	f8 e0       	ldi	r31, 0x08	; 8
+ 2ba:	83 e8       	ldi	r24, 0x83	; 131
+ 2bc:	96 e0       	ldi	r25, 0x06	; 6
+ 2be:	80 87       	std	Z+8, r24	; 0x08
+ 2c0:	91 87       	std	Z+9, r25	; 0x09
+    USART3.CTRLB |= USART_RXEN_bm | USART_TXEN_bm; // Enable RX and TX
+ 2c2:	86 81       	ldd	r24, Z+6	; 0x06
+ 2c4:	80 6c       	ori	r24, 0xC0	; 192
+ 2c6:	86 83       	std	Z+6, r24	; 0x06
+ 2c8:	08 95       	ret
+
+000002ca <USART3_sendChar>:
+}
+
+void USART3_sendChar(char c) {
+    // Send a single character over USART
+    while (!(USART3.STATUS & USART_DREIF_bm)) {
+ 2ca:	90 91 64 08 	lds	r25, 0x0864	; 0x800864 <__TEXT_REGION_LENGTH__+0x7e0864>
+ 2ce:	95 ff       	sbrs	r25, 5
+ 2d0:	fc cf       	rjmp	.-8      	; 0x2ca <USART3_sendChar>
+        // Wait for data register to empty
+    }
+    // Finally send the character by writing it to the send register
+    USART3.TXDATAL = c;
+ 2d2:	80 93 62 08 	sts	0x0862, r24	; 0x800862 <__TEXT_REGION_LENGTH__+0x7e0862>
+ 2d6:	08 95       	ret
+
+000002d8 <USART3_printChar>:
+    }
+}
+
+uint8_t USART3_printChar(char c, FILE* stream) {
+    // USART3 interface function for "printf" stream override
+    USART3_sendChar(c);
+ 2d8:	0e 94 65 01 	call	0x2ca	; 0x2ca <USART3_sendChar>
+    return 0;
+}
+ 2dc:	80 e0       	ldi	r24, 0x00	; 0
+ 2de:	08 95       	ret
+
+000002e0 <main>:
+#include "protocol/I2C.h"
+
+
+
+int main(void) {
+    USART3_init();
+ 2e0:	0e 94 55 01 	call	0x2aa	; 0x2aa <USART3_init>
+    BUTTON_BUILTIN_init();
+ 2e4:	0e 94 9b 00 	call	0x136	; 0x136 <BUTTON_BUILTIN_init>
+    LED_BUILTIN_init();
+ 2e8:	0e 94 a3 00 	call	0x146	; 0x146 <LED_BUILTIN_init>
+
+    stdout = &USART3_stream;    // Move to usart.h if possible
+ 2ec:	80 e0       	ldi	r24, 0x00	; 0
+ 2ee:	90 e4       	ldi	r25, 0x40	; 64
+ 2f0:	80 93 24 40 	sts	0x4024, r24	; 0x804024 <__iob+0x2>
+ 2f4:	90 93 25 40 	sts	0x4025, r25	; 0x804025 <__iob+0x3>
+
+    // Instantiate transmission register
+
+    // Initialize I2C
+    I2C_init(I2C_TARGET_DEFAULT_ADDRESS);
+ 2f8:	84 e0       	ldi	r24, 0x04	; 4
+ 2fa:	0e 94 97 01 	call	0x32e	; 0x32e <I2C_init>
+
+    // Update I2C address from DIP-switch
+    twi_address_t new_address = 4;  // TODO: Read this address from DIP-switches
+    I2C_setAddress(new_address);
+ 2fe:	84 e0       	ldi	r24, 0x04	; 4
+ 300:	0e 94 a6 01 	call	0x34c	; 0x34c <I2C_setAddress>
+        // Write data into transmission register
+
+        // If master polls for information, send the register
+
+
+        printf("Hello, world!\n");
+ 304:	8e e0       	ldi	r24, 0x0E	; 14
+ 306:	90 e4       	ldi	r25, 0x40	; 64
+ 308:	0e 94 a9 01 	call	0x352	; 0x352 <puts>
+        LED_BUILTIN_toggle();
+ 30c:	0e 94 a7 00 	call	0x14e	; 0x14e <LED_BUILTIN_toggle>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 310:	2f e7       	ldi	r18, 0x7F	; 127
+ 312:	88 e3       	ldi	r24, 0x38	; 56
+ 314:	91 e0       	ldi	r25, 0x01	; 1
+ 316:	21 50       	subi	r18, 0x01	; 1
+ 318:	80 40       	sbci	r24, 0x00	; 0
+ 31a:	90 40       	sbci	r25, 0x00	; 0
+ 31c:	e1 f7       	brne	.-8      	; 0x316 <main+0x36>
+ 31e:	00 c0       	rjmp	.+0      	; 0x320 <main+0x40>
+ 320:	00 00       	nop
+ 322:	f0 cf       	rjmp	.-32     	; 0x304 <main+0x24>
+
+00000324 <onWrite>:
+volatile uint8_t buffer_index;
+
+
+twi_write_callback_t onWrite(uint8_t data) {
+    /* Routine for every time we write to the I2C bus */
+}
+ 324:	08 95       	ret
+
+00000326 <onRead>:
+
+twi_read_callback_t onRead(void) {
+    /* Routine for every time we read from I2C bus */
+    uint8_t data = 0;
+    return data;
+}
+ 326:	80 e0       	ldi	r24, 0x00	; 0
+ 328:	90 e0       	ldi	r25, 0x00	; 0
+ 32a:	08 95       	ret
+
+0000032c <onStop>:
+
+twi_stop_callback_t onStop(void) {
+    /* Routine for every time we end communication on I2C bus */
+}
+ 32c:	08 95       	ret
+
+0000032e <I2C_init>:
+
+void I2C_init(twi_address_t I2C_address) {
+    /* I2C target initialization procedure */
+    TWI0_TARGET_init(I2C_address);
+ 32e:	0e 94 c4 00 	call	0x188	; 0x188 <TWI0_TARGET_init>
+
+    TWI_TARGET_registerWriteCallback(onWrite);
+ 332:	82 e9       	ldi	r24, 0x92	; 146
+ 334:	91 e0       	ldi	r25, 0x01	; 1
+ 336:	0e 94 dd 00 	call	0x1ba	; 0x1ba <TWI_TARGET_registerWriteCallback>
+    TWI_TARGET_registerReadCallback(onRead);
+ 33a:	83 e9       	ldi	r24, 0x93	; 147
+ 33c:	91 e0       	ldi	r25, 0x01	; 1
+ 33e:	0e 94 e2 00 	call	0x1c4	; 0x1c4 <TWI_TARGET_registerReadCallback>
+    TWI_TARGET_registerStopCallback(onStop);
+ 342:	86 e9       	ldi	r24, 0x96	; 150
+ 344:	91 e0       	ldi	r25, 0x01	; 1
+ 346:	0e 94 e7 00 	call	0x1ce	; 0x1ce <TWI_TARGET_registerStopCallback>
+ 34a:	08 95       	ret
+
+0000034c <I2C_setAddress>:
+}
+
+void I2C_setAddress(twi_address_t I2C_address) {
+    /* Update I2C address to provided value */
+    TWI0_TARGET_updateAddress(I2C_address);
+ 34c:	0e 94 c0 00 	call	0x180	; 0x180 <TWI0_TARGET_updateAddress>
+ 350:	08 95       	ret
+
+00000352 <puts>:
+ 352:	0f 93       	push	r16
+ 354:	1f 93       	push	r17
+ 356:	cf 93       	push	r28
+ 358:	df 93       	push	r29
+ 35a:	e0 91 24 40 	lds	r30, 0x4024	; 0x804024 <__iob+0x2>
+ 35e:	f0 91 25 40 	lds	r31, 0x4025	; 0x804025 <__iob+0x3>
+ 362:	23 81       	ldd	r18, Z+3	; 0x03
+ 364:	21 ff       	sbrs	r18, 1
+ 366:	1b c0       	rjmp	.+54     	; 0x39e <puts+0x4c>
+ 368:	8c 01       	movw	r16, r24
+ 36a:	d0 e0       	ldi	r29, 0x00	; 0
+ 36c:	c0 e0       	ldi	r28, 0x00	; 0
+ 36e:	f8 01       	movw	r30, r16
+ 370:	81 91       	ld	r24, Z+
+ 372:	8f 01       	movw	r16, r30
+ 374:	60 91 24 40 	lds	r22, 0x4024	; 0x804024 <__iob+0x2>
+ 378:	70 91 25 40 	lds	r23, 0x4025	; 0x804025 <__iob+0x3>
+ 37c:	db 01       	movw	r26, r22
+ 37e:	18 96       	adiw	r26, 0x08	; 8
+ 380:	ed 91       	ld	r30, X+
+ 382:	fc 91       	ld	r31, X
+ 384:	19 97       	sbiw	r26, 0x09	; 9
+ 386:	88 23       	and	r24, r24
+ 388:	31 f0       	breq	.+12     	; 0x396 <puts+0x44>
+ 38a:	09 95       	icall
+ 38c:	89 2b       	or	r24, r25
+ 38e:	79 f3       	breq	.-34     	; 0x36e <puts+0x1c>
+ 390:	df ef       	ldi	r29, 0xFF	; 255
+ 392:	cf ef       	ldi	r28, 0xFF	; 255
+ 394:	ec cf       	rjmp	.-40     	; 0x36e <puts+0x1c>
+ 396:	8a e0       	ldi	r24, 0x0A	; 10
+ 398:	09 95       	icall
+ 39a:	89 2b       	or	r24, r25
+ 39c:	19 f0       	breq	.+6      	; 0x3a4 <puts+0x52>
+ 39e:	8f ef       	ldi	r24, 0xFF	; 255
+ 3a0:	9f ef       	ldi	r25, 0xFF	; 255
+ 3a2:	02 c0       	rjmp	.+4      	; 0x3a8 <puts+0x56>
+ 3a4:	8d 2f       	mov	r24, r29
+ 3a6:	9c 2f       	mov	r25, r28
+ 3a8:	df 91       	pop	r29
+ 3aa:	cf 91       	pop	r28
+ 3ac:	1f 91       	pop	r17
+ 3ae:	0f 91       	pop	r16
+ 3b0:	08 95       	ret
+
+000003b2 <_exit>:
+ 3b2:	f8 94       	cli
+
+000003b4 <__stop_program>:
+ 3b4:	ff cf       	rjmp	.-2      	; 0x3b4 <__stop_program>

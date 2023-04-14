@@ -1,4 +1,4 @@
-#include "protocol/I2C.h"
+#include "I2C.h"
 
 /*
  * protocol/I2C.c

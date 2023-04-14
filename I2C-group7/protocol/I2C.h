@@ -13,10 +13,10 @@
 
 #include <avr/io.h>
 
-#include "protocol/I2C_packet.h"
+#include "I2C_packet.h"
 
-#include "configuration.h"
-#include "lib/twi.h"
+#include "../configuration.h"
+#include "../lib/twi.h"
 
 // Init I2C
 void I2C_init(twi_address_t I2C_address);
