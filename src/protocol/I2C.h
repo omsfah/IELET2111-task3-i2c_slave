@@ -15,6 +15,13 @@
 
 #include "protocol/I2C_packet.h"
 
+#include "configuration.h"
+#include "lib/twi.h"
+
 // Init I2C
+void I2C_init(twi_address_t I2C_address);
+void I2C_setAddress(twi_address_t I2C_address);
+
+// I2C status function that returns I2C_status_t struct?
 
 #endif
