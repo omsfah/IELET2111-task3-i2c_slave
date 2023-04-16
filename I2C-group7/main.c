@@ -1,5 +1,6 @@
 // File structure:
-// lib: entioentsd
+// lib for functions and declarations
+// hardware for initializing hardware components
 
 #define F_CPU 4000000UL
 
@@ -24,9 +25,10 @@ int main(void) {
     USART3_init();
     BUTTON_BUILTIN_init();
     LED_BUILTIN_init();
+	ADC0_init(PORT_D, 0, SINGLE_CONVERSION_MODE);
+	
 
     stdout = &USART3_stream;    // Move to usart.h if possible
-
     // Instantiate transmission register
 
     // Initialize I2C
@@ -53,8 +55,9 @@ int main(void) {
 
         // If master polls for information, send the register
 
-
-        printf("Hello, world!\n");
+		
+		uint16_t val = ADC0_readSingle(PORT_E, 0);
+        printf("ADC verdi= %d \r\n",val);
         LED_BUILTIN_toggle();
         _delay_ms(100);
     }

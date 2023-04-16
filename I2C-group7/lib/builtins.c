@@ -15,7 +15,7 @@ void BUTTON_BUILTIN_awaitPress(void) {
 
 void LED_BUILTIN_init(void) {
     // Initialize builtin LED on PB3
-    PORTB.DIRSET = PIN3_bm;
+    _SFR_MEM8(0x0421) = PIN3_bm;
 }
 
 void LED_BUILTIN_toggle(void) {
