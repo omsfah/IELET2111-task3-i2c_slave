@@ -16,8 +16,8 @@
 #include "hardware/init.h"
 #include "hardware/read.h"
 
-
 #include "protocol/I2C.h"
+#include "protocol/logging.h"
 
 
 
@@ -29,10 +29,9 @@ int main(void) {
 	
 
     stdout = &USART3_stream;    // Move to usart.h if possible
-    // Instantiate transmission register
 
-    // Initialize I2C
-    I2C_init(I2C_TARGET_DEFAULT_ADDRESS);
+    I2C_init(I2C_TARGET_DEFAULT_ADDRESS);   // Initialize I2C
+    uint8_t data_buffer[9];     // TODO: temporary until we use the struct
 
     // Update I2C address from DIP-switch
     twi_address_t new_address = 4;  // TODO: Read this address from DIP-switches
@@ -53,11 +52,21 @@ int main(void) {
         // Check Fan RPM
         // Write data into transmission register
 
-        // If master polls for information, send the register
-
 		
 		uint16_t val = ADC0_readSingle(PORT_E, 0);
         printf("ADC verdi= %d \r\n",val);
+
+        // If master polls for information, send the register
+        if (data_ready) {
+            // (Temporary stuff for testing I2C)
+            cli();
+            memcpy(data_buffer, (const uint8_t *)incoming_buffer, 8);
+            sei();
+            data_buffer[8] = '\0';
+            printf("Received: %s\n", data_buffer);
+            data_ready = false;
+        }
+
         LED_BUILTIN_toggle();
         _delay_ms(100);
     }
