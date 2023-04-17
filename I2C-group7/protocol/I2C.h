@@ -17,15 +17,20 @@
 
 #include "../configuration.h"
 #include "../lib/twi.h"
+#include "logging.h"
 
 // Init I2C
 void I2C_init(twi_address_t I2C_address);
 void I2C_setAddress(twi_address_t I2C_address);
 
+
 // I2C status function that returns I2C_status_t struct?
 
 // Make transmission buffer available?
-extern volatile i2c_status_packet_t incoming_buffer;
+//extern volatile i2c_status_packet_t incoming_buffer; // TODO: proper buffer
+extern volatile uint8_t incoming_buffer[8];
 extern volatile i2c_status_packet_t outgoing_buffer;
+
+extern volatile bool data_ready;
 
 #endif

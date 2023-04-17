@@ -36,12 +36,12 @@ typedef uint8_t twi_address_t;
 
 /**************** TODO: docstring
  */
-typedef void (*twi_write_callback_t)(uint8_t);
-typedef uint8_t (*twi_read_callback_t)(void);
+typedef void (*twi_receive_callback_t)(uint8_t);
+typedef uint8_t (*twi_transmit_callback_t)(void);
 typedef void (*twi_stop_callback_t)(void);
 
-void TWI_TARGET_registerWriteCallback(twi_write_callback_t function);
-void TWI_TARGET_registerReadCallback(twi_read_callback_t function);
+void TWI_TARGET_registerReceiveCallback(twi_receive_callback_t function);
+void TWI_TARGET_registerTransmitCallback(twi_transmit_callback_t function);
 void TWI_TARGET_registerStopCallback(twi_stop_callback_t function);
 
 

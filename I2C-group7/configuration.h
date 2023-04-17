@@ -8,6 +8,10 @@
  *
  */
 
+
 #define F_CPU 4000000UL
 
-#define I2C_TARGET_DEFAULT_ADDRESS 4
+#define I2C_TARGET_DEFAULT_ADDRESS 0x04
+
+// Debug printing config
+//#define ENABLE_DEBUG_PRINT_TO_USART3
