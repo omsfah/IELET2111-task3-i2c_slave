@@ -12,13 +12,19 @@
 
 
 static const uint16_t POLLING_DELAY_ms = 1000;
-static const uint16_t PACKET_SIZE_bytes = 4;
-static const uint8_t SLAVE_I2C_ADDRESS = 4;
+static const uint8_t PACKET_SIZE_bytes = 2;
+static const uint8_t SLAVE_I2C_ADDRESS = 0x04;
+
+static const uint8_t DEBUG_INCREMENTER_MIN = 48;
+static const uint8_t DEBUG_INCREMENTER_MAX = 57;
+
+uint8_t number = DEBUG_INCREMENTER_MIN;
 
 
 void setup(void) {
     Serial.begin(115200);
     Serial.setDebugOutput(true);
+    Wire.end();
     Wire.begin();   // Default SDA 21, SCL 22
 
     Serial.println("hello there");
@@ -33,7 +39,17 @@ void loop(void) {
     Wire.beginTransmission(SLAVE_I2C_ADDRESS);
 
     // Optionally send something to the slave
-    Wire.write(42);
+    number++;
+    if (number > DEBUG_INCREMENTER_MAX) {
+        number = DEBUG_INCREMENTER_MIN;
+    }
+    Serial.printf("Sending data: %d\n", number);
+    Wire.write(number);
+    Wire.write(' ');
+    Wire.write('a');
+    Wire.write('u');
+    Wire.write('c');
+    Wire.write('h');
 
     // End transmission and record potential error code
     uint8_t i2c_send_result = Wire.endTransmission(true);
@@ -53,4 +69,5 @@ void loop(void) {
             Serial.println(_receive_buffer[i]);
         }
     }
+    Serial.printf("\n");
 }
