@@ -13,6 +13,9 @@
 
 #include <avr/io.h>
 
+#include "dip-switch.h"
+#include "seven-segment.h"
+
 // Init DIP-switch
 // Init 7-segment display
 // Init brownout detection

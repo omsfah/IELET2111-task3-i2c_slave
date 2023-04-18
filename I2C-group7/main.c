@@ -26,6 +26,7 @@ int main(void) {
     LED_BUILTIN_init();
 	ADC0_init(PORT_D, 0, SINGLE_CONVERSION_MODE);
     DIP4_init();
+    SEVEN_SEGMENT_init();
 	
 
     stdout = &USART3_stream;    // Move to usart.h if possible
@@ -58,6 +59,7 @@ int main(void) {
 		uint8_t dip = DIP4_read();
         printf("ADC: %d, ",val);
         printf("DIP: %d \r\n",dip);
+        SEVEN_SEGMENT_showNumber(dip);
 
         // If master polls for information, send the register
         if (data_ready) {
