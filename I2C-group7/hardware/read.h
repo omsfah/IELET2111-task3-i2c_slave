@@ -14,6 +14,8 @@
 #include <avr/io.h>
 
 // Read DIP-switch
+uint8_t DIP4_read(void);
+
 // Read fan monitoring
 // Read voltage monitoring
 

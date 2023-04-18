@@ -14,7 +14,10 @@
 #include <avr/io.h>
 
 // Init DIP-switch
-// Init I2C
+void DIP4_init(void);
+
+// Init 7-segment display
+
 // Init brownout detection
 // Init watchdog
 // Init fan monitoring
