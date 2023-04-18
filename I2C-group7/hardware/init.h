@@ -17,6 +17,7 @@
 void DIP4_init(void);
 
 // Init 7-segment display
+void SEVEN_SEGMENT_init(void);
 
 // Init brownout detection
 // Init watchdog
