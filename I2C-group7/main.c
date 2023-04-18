@@ -14,7 +14,6 @@
 #include "lib/usart.h"
 
 #include "hardware/init.h"
-#include "hardware/read.h"
 
 #include "protocol/I2C.h"
 #include "protocol/logging.h"
@@ -26,6 +25,7 @@ int main(void) {
     BUTTON_BUILTIN_init();
     LED_BUILTIN_init();
 	ADC0_init(PORT_D, 0, SINGLE_CONVERSION_MODE);
+    DIP4_init();
 	
 
     stdout = &USART3_stream;    // Move to usart.h if possible
@@ -52,9 +52,12 @@ int main(void) {
         // Check Fan RPM
         // Write data into transmission register
 
-		
+
+        // While developing, we can test subsystems here
 		uint16_t val = ADC0_readSingle(PORT_E, 0);
-        printf("ADC verdi= %d \r\n",val);
+		uint8_t dip = DIP4_read();
+        printf("ADC: %d, ",val);
+        printf("DIP: %d \r\n",dip);
 
         // If master polls for information, send the register
         if (data_ready) {
