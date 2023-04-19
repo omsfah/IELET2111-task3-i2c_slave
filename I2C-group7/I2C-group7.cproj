@@ -139,16 +139,22 @@
     <Compile Include="configuration.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="hardware\dip-switch.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hardware\dip-switch.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="hardware\init.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="hardware\init.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="hardware\read.c">
+    <Compile Include="hardware\seven-segment.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="hardware\read.h">
+    <Compile Include="hardware\seven-segment.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="lib\adc.c">
@@ -185,6 +191,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="protocol\I2C_packet.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="protocol\logging.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
