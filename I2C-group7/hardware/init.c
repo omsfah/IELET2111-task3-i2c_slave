@@ -29,6 +29,8 @@ void MACHINE_STATE_init(void) {
     //   data structure
     //   EEPROM
     //   Reset controller?
+
+    machine_state.error_code_has_changed = false;
 }
 
 void development_testing(void) {
@@ -39,15 +41,15 @@ void development_testing(void) {
     printf("DIP: %d \r\n", machine_state.sensor_data.dip_switch);
 
     // If master polls for information, send the register
-    if (data_ready) {
+    if (machine_state.i2c_data.data_ready) {
         // (Temporary stuff for testing I2C)
         cli();
-        memcpy(data_buffer, (const uint8_t *)incoming_buffer, 8);
+        memcpy(data_buffer, (const uint8_t *)transmission_buffer, 8);
         sei();
         data_buffer[8] = '\0';
         printf("Received: %s\n", data_buffer);
         SEVEN_SEGMENT_showNumber(data_buffer[0] - 48);
-        data_ready = false;
+        machine_state.i2c_data.data_ready = false;
     }
 
     LED_BUILTIN_toggle();
@@ -62,15 +64,20 @@ void MACHINE_STATE_update(void) {
     machine_state.sensor_data.vint = ADC0_readSingle(PORT_E, 1);
 
     // Check Temperature
+    machine_state.sensor_data.temp = ADC0_readSingle(PORT_E, 2);
+
+    // Check Fan RPM
 
     // Check I2C (save something about I2C status?)
 
     // Update I2C address from DIP-switch
     machine_state.sensor_data.dip_switch = DIP4_read();
-    machine_state.i2c_address = machine_state.sensor_data.dip_switch + I2C_ADDRESS_OFFSET;
-    I2C_setAddress(machine_state.i2c_address);
+    machine_state.i2c_data.address = machine_state.sensor_data.dip_switch + I2C_ADDRESS_OFFSET;
+    I2C_setAddress(machine_state.i2c_data.address);
 
-    // Check Fan RPM
+    // Write error code to the seven segment display
+    if (machine_state.error_code_has_changed)
+        SEVEN_SEGMENT_showNumber(machine_state.error_code);
 
     development_testing();
 }

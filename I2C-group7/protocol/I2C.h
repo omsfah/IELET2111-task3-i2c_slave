@@ -11,9 +11,11 @@
 #ifndef PROTOCOL_I2C_H_
 #define PROTOCOL_I2C_H_
 
+#define TRANSMISSION_BUFFER_SIZE 8
+
 #include <avr/io.h>
 
-#include "I2C_packet.h"
+#include "../hardware/init.h"
 
 #include "../configuration.h"
 #include "../lib/twi.h"
@@ -22,15 +24,5 @@
 // Init I2C
 void I2C_init(twi_address_t I2C_address);
 void I2C_setAddress(twi_address_t I2C_address);
-
-
-// I2C status function that returns I2C_status_t struct?
-
-// Make transmission buffer available?
-//extern volatile i2c_status_packet_t incoming_buffer; // TODO: proper buffer
-extern volatile uint8_t incoming_buffer[8];
-extern volatile i2c_status_packet_t outgoing_buffer;
-
-extern volatile bool data_ready;
-
+extern volatile uint8_t transmission_buffer[TRANSMISSION_BUFFER_SIZE];
 #endif
