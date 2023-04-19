@@ -15,7 +15,7 @@
 
 #include <avr/io.h>
 
-#include "../hardware/init.h"
+#include "../hardware/system.h"
 
 #include "../configuration.h"
 #include "../lib/twi.h"

@@ -6,7 +6,7 @@
 #include <util/delay.h>
 
 #include "configuration.h"
-#include "hardware/init.h"
+#include "hardware/system.h"
 
 #include "protocol/I2C.h"
 #include "protocol/logging.h"

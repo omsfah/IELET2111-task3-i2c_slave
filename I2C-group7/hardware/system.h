@@ -1,10 +1,12 @@
 /*
- * hardware/init.h
+ * hardware/system.h
  *
- * Initialization of hardware specific to the
- * I2C target fan/voltage monitoring system.
- * If subsystems grow too large, they get their
- * own file.
+ * Main branchpoint for initialization and drivers
+ * of components specific to the I2C target fan/voltage
+ * monitoring system. If subsystems grow too large, they
+ * get their own file in the 'hardware' folder.
+ * The global 'machine_state' data container is provided
+ * with this file.
  *
  * board: AVR128DB48 Curiosity Nano
  *

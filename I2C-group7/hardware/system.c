@@ -1,4 +1,4 @@
-#include "init.h"
+#include "system.h"
 
 // Here we instantiate the global machine state data structure
 machine_state_t machine_state;
