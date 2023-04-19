@@ -82,10 +82,10 @@ typedef enum {
 typedef struct {
     /* Container data structure for the whole machine state */
 
-    alarm_threshold_t threshold;
+    volatile alarm_threshold_t threshold;
+    volatile measurements_t sensor_data;
     volatile i2c_data_t i2c_data;
     //measurements_t sensor_data[10]; // TODO: use an array so we can do mean values
-    measurements_t sensor_data;
     error_code_t error_code;
     bool error_code_has_changed;
 } machine_state_t;

@@ -57,7 +57,7 @@ void development_testing(void) {
 }
 
 void MACHINE_STATE_update(void) {
-    // Update sensor values
+    /* Update 'machine_state' with new readings */
 
     // Check external voltage
     machine_state.sensor_data.vext = ADC0_readSingle(PORT_E, 0);
@@ -73,12 +73,25 @@ void MACHINE_STATE_update(void) {
     // Update I2C address from DIP-switch
     machine_state.sensor_data.dip_switch = DIP4_read();
     machine_state.i2c_data.address = machine_state.sensor_data.dip_switch + I2C_ADDRESS_OFFSET;
-    I2C_setAddress(machine_state.i2c_data.address);
 
-    // Write error code to the seven segment display
-    if (machine_state.error_code_has_changed)
-        SEVEN_SEGMENT_showNumber(machine_state.error_code);
 
     development_testing();
 }
 
+void ALARM_SYSTEM_update(void) {
+    /* Based on the current 'machine_state', decide
+     * 'error_code' and whether or not to sound the
+     * buzzer alarm */
+
+    // TODO: implement
+
+    // Check if we exceed any threshold
+
+    // If builtin button (PB2) was pushed, we sum (disable) the alarm sound
+
+    // Update the buzzer state
+
+    // Write error code to the seven segment display
+    if (machine_state.error_code_has_changed)
+        SEVEN_SEGMENT_showNumber(machine_state.error_code);
+}

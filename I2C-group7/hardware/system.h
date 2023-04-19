@@ -12,8 +12,8 @@
  *
  */
 
-#ifndef HW_INIT_H_
-#define HW_INIT_H_
+#ifndef SYSTEM_H_
+#define SYSTEM_H_
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -36,7 +36,9 @@ void SYSTEMS_init(void);
 
 void MACHINE_STATE_init(void);
 
-void MACHINE_STATE_sensorUpdate(void);
+void MACHINE_STATE_sensor(void);
+
+void ALARM_SYSTEM_update(void);
 
 extern machine_state_t machine_state;
 

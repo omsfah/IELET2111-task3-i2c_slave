@@ -1,9 +1,20 @@
+/*
+ * main.c
+ *
+ * Main entry point for I2C target fan/voltage monitor.
+ *
+ * Project for the subject IELET2111 Mikrokontrollerprogrammering.
+ *  - Olaf Andreas Hafsmo
+ *  - Gunnar Myhre
+ *  - Daniel Thauland
+ * Spring 2023. NTNU, Trondheim
+ *
+ * board: AVR128DB48 Curiosity Nano
+ */
+
 // File structure:
 // lib for functions and declarations
 // hardware for initializing hardware components
-
-#include <avr/io.h>
-#include <util/delay.h>
 
 #include "configuration.h"
 #include "hardware/system.h"
@@ -22,12 +33,20 @@ int main(void) {
         /* We loop forever, updating the machine_state
          * data structure with sensor data for every
          * loop iteration. On the I2C controllers
-         * request, we transmit the data. If any level
-         * exceeds a given threshold, the alarm is sound
-         * and alarm code is shown on the seven segment
-         * display.
+         * request, we transmit the data.
          */
         MACHINE_STATE_update();
+
+        /* If any level exceeds a given threshold, the
+         * alarm is sound and alarm code is shown on the
+         * seven segment display.
+         */
+        ALARM_SYSTEM_update();
+
+        /* If the I2C controller has commanded a change of
+         * the system settings, we do so.
+         */
+        I2C_SYSTEM_update();
     }
 }
 

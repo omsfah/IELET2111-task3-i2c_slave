@@ -1,8 +1,8 @@
 /*
  * protocol/I2C.h
  *
- * Abstractions of I2C communication, specific
- * to the I2C target fan/voltage monitoring system.
+ * I2C communication routines specific to
+ * the I2C target fan/voltage monitoring system.
  *
  * board: AVR128DB48 Curiosity Nano
  *
@@ -21,8 +21,11 @@
 #include "../lib/twi.h"
 #include "logging.h"
 
-// Init I2C
 void I2C_init(twi_address_t I2C_address);
 void I2C_setAddress(twi_address_t I2C_address);
+void I2C_SYSTEM_update();
+
 extern volatile uint8_t transmission_buffer[TRANSMISSION_BUFFER_SIZE];
+
+
 #endif

@@ -15,8 +15,6 @@ volatile uint8_t transmission_buffer[TRANSMISSION_BUFFER_SIZE];
 twi_receive_callback_t onReceive(uint8_t data) {
     /* Routine for every time we receive to the I2C bus */
 
-    // TODO: Choose the action depending on the register byte
-
     if(buffer_index < TRANSMISSION_BUFFER_SIZE) {
         transmission_buffer[buffer_index] = data;
         buffer_index++;
@@ -52,5 +50,17 @@ void I2C_init(twi_address_t I2C_address) {
 void I2C_setAddress(twi_address_t I2C_address) {
     /* Update I2C address to provided value */
     TWI0_TARGET_updateAddress(I2C_address);
+}
+
+void I2C_SYSTEM_update(void) {
+    /* I2C housekeeping function exposed to 'main' */
+
+    // TODO: implement
+
+    // If the 'new_settings_flag' is set, copy the new
+    // threshold values over to the 'machine_state'
+
+    // Update I2C address
+    I2C_setAddress(machine_state.i2c_data.address);
 }
 
