@@ -13,7 +13,7 @@
 
 static const uint16_t POLLING_DELAY_ms = 1000;
 static const uint8_t PACKET_SIZE_bytes = 2;
-static const uint8_t SLAVE_I2C_ADDRESS = 0x04;
+static const uint8_t SLAVE_I2C_ADDRESS = 104;
 
 static const uint8_t DEBUG_INCREMENTER_MIN = 48;
 static const uint8_t DEBUG_INCREMENTER_MAX = 57;
