@@ -6,6 +6,9 @@ twi_receive_callback_t TWI0_TARGET_onReceive = 0;
 twi_transmit_callback_t TWI0_TARGET_onTransmit = 0;
 twi_stop_callback_t TWI0_TARGET_onStop = 0;
 
+#define TRANSMISSION_BUFFER_SIZE 32
+volatile uint8_t twi_buffer[TRANSMISSION_BUFFER_SIZE];
+
 
 static void TWI0_wait(void) {
     /* Wait forever while the TWI bus is not ready or there is an error */
@@ -83,69 +86,66 @@ void TWI_TARGET_registerStopCallback(twi_stop_callback_t function) {
 
 
 ISR(TWI0_TWIS_vect) {
-    /* General ISR for TWI target */
+    /* Interrupt service routine for TWI target
+     *
+     * While in TWI target (client) operation, an interrupt on
+     * this vector can happen in five scenarios:
+     *
+     *  A: Address package, controller will send data
+     *  B: Address package, controller requests data
+     *  C: Stop condition received
+     *  D: Controller sent data, a byte has been received in SDATA
+     *  E: Target will send data, a byte should be written to SDATA
+     *
+     * We enumerate the state and call the user defined callback functions.
+     * See flow chart 29-6 in the avr128db48 data sheet.
+     */
 
-    // TODO: is it possible to break this up into more atomic ISRs?
+    cli();  // We disable interrupts temporarily
 
-    // Check if data interrupt flag is high
-    if (TWI0.SSTATUS & TWI_DIF_bm) {
-
-        // Prepare a data buffer
-        uint8_t data = 0x00;
-
-        // Scenario A: Receive data (Controller -> Target)
-        if (((TWI0.SSTATUS & TWI_DIR_bm) >> TWI_DIR_bp) == TWI_WRITE) {
-            data = TWI0.SDATA;
-
-            // If receive callback function exists, run it on the data
-            if (TWI0_TARGET_onReceive) {
-                TWI0_TARGET_onReceive(data);
-            }
-        }
-
-        // Scenario B: Transmit data (Controller <- Target)
-        else { // TODO: add proper if clause instead of else
-            // If write callback function exists, run it on the data
-            if (TWI0_TARGET_onTransmit) {
-                data = TWI0_TARGET_onTransmit();
-            }
-
-            TWI0.SDATA = data;
-        }
-        
-        // Either way, we send ACK
-        TWI0.SCTRLB = TWI_ACKACT_ACK_gc | TWI_SCMD_RESPONSE_gc;
-    }
-
-    // Check if address detection flag is high
+    // Address/stop interrupt. Scenario A, B, or C
     if (TWI0.SSTATUS & TWI_APIF_bm) {
-
-        // Address match, send ACK
         if (TWI0.SSTATUS & TWI_AP_ADR_gc) {
-            // It turns out that writing to the SCTRLB register in two
-            // operations does not yield the same compiled result. 
-            // This was the cause of a weird timeout bug that was hard to
-            // track down.
-            //
-            // The culprit is left commented out for future reference.
-
-            /*
-            TWI0.SCTRLB |= TWI_ACKACT_ACK_gc;
-            TWI0.SCTRLB |= TWI_SCMD_RESPONSE_gc;
-            */
-
+            // Scenario A or B.
+            
+            // We send 'ACK' and command the TWI controller to proceed
             TWI0.SCTRLB = TWI_ACKACT_ACK_gc | TWI_SCMD_RESPONSE_gc;
         }
 
-        else { //TODO: add proper if clause instead of else
-            if (TWI0_TARGET_onStop) {
-                TWI0_TARGET_onStop();
-            }
-            
-            // Transaction is complete, send acknowledgement
+        if (TWI0.SSTATUS & ~TWI_AP_STOP_gc) {
+            // Scenario C.
+
+            // We call the user defined callback function
+            TWI0_TARGET_onStop();
+
+            // We send 'NACK' and end transaction with the COMPTRANS command
             TWI0.SCTRLB = TWI_ACKACT_NACK_gc | TWI_SCMD_COMPTRANS_gc;
         }
     }
+
+    // Data interrupt. Scenario D or E
+    if (TWI0.SSTATUS & TWI_DIF_bm) {
+        bool direction = (TWI0.SSTATUS & TWI_DIR_bm) >> TWI_DIR_bp;
+
+        if (direction == 0) {
+            // Scenario D: if direction bit is 0, controller sends us data
+
+            // We call the user defined callback function
+            TWI0_TARGET_onReceive(TWI0.SDATA);
+        }
+
+        if (direction == 1) {
+            // Scenario E: if direction bit is 1, we send data to controller
+
+            // We get the byte from the user defined callback function
+            TWI0.SDATA = TWI0_TARGET_onTransmit();
+        }
+
+        // In both scenarios, we send 'ACK' and command the TWI controller to proceed
+        TWI0.SCTRLB = TWI_ACKACT_ACK_gc | TWI_SCMD_RESPONSE_gc;
+    }
+
+    sei();  // Re-enable interrupts
 }
 
 
