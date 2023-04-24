@@ -6,8 +6,6 @@ twi_receive_callback_t TWI0_TARGET_onReceive = 0;
 twi_transmit_callback_t TWI0_TARGET_onTransmit = 0;
 twi_stop_callback_t TWI0_TARGET_onStop = 0;
 
-#define TRANSMISSION_BUFFER_SIZE 32
-volatile uint8_t twi_buffer[TRANSMISSION_BUFFER_SIZE];
 
 
 static void TWI0_wait(void) {
@@ -130,7 +128,7 @@ ISR(TWI0_TWIS_vect) {
         if (direction == 0) {
             // Scenario D: if direction bit is 0, controller sends us data
 
-            // We call the user defined callback function
+            // We give the received byte to the user defined callback function
             TWI0_TARGET_onReceive(TWI0.SDATA);
         }
 

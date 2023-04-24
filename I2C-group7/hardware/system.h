@@ -36,7 +36,7 @@ void SYSTEMS_init(void);
 
 void MACHINE_STATE_init(void);
 
-void MACHINE_STATE_sensor(void);
+void MACHINE_STATE_update(void);
 
 void ALARM_SYSTEM_update(void);
 
