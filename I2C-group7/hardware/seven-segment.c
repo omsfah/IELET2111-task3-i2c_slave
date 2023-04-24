@@ -1,12 +1,23 @@
 #include "seven-segment.h"
 
+
+static inline void TOP(void) {PORTD.OUTSET |= PIN5_bm;}
+static inline void UL(void)  {PORTD.OUTSET |= PIN6_bm;}
+static inline void UR(void)  {PORTD.OUTSET |= PIN4_bm;}
+static inline void MID(void) {PORTD.OUTSET |= PIN7_bm;}
+static inline void LL(void)  {PORTC.OUTSET |= PIN7_bm;}
+static inline void LR(void)  {PORTC.OUTSET |= PIN5_bm;}
+static inline void BOT(void) {PORTC.OUTSET |= PIN6_bm;}
+static inline void DOT(void) {PORTC.OUTSET |= PIN4_bm;}
+
+
 void SEVEN_SEGMENT_init(void) {
     /* Initialize generic seven segment display.
      * 
      * Connection from the PORTD pins on Curiosity Nano AVR128db48 to
      * the display is as follows:
      *
-     * 0 1 GND 2 3
+     * 7 6 GND 5 4  PORTD
      * -----------
      * | display |
      * | display |
@@ -14,70 +25,69 @@ void SEVEN_SEGMENT_init(void) {
      * | display |
      * | display |
      * -----------
-     * 4 5 GND 6 7
+     * 7 6 GND 5 4  PORTC
      */
-    PORTD.DIRSET = 0xff;    // All pins 0-7
+    PORTD.DIRSET = 0xf0;    // Pins PD4-PD7
+    PORTC.DIRSET = 0xf0;    // Pins PC4-PC7
 }
 
 void SEVEN_SEGMENT_showNumber(int8_t number) {
     /* Show a number (0-9) on the seven segment display */
 
-    /* LED segment diagram for PORTD pins 0-7, including decimal dot (7)
-     *  --2--
-     * |     |
-     * 1     3
-     * |     |
-     *  --0--
-     * |     |
-     * 4     6
-     * |     |
-     *  --5--  7
+    /* LED segment diagram
+     *   -PD5-
+     *  |     |
+     * PD6   PD4
+     *  |     |
+     *   -PD7-
+     *  |     |
+     * PC7   PC5
+     *  |     |
+     *   -PC6-  PC4
      *
      */
-
-    PORTD.OUTCLR = 0xff;   // Set all pins low
+    PORTD.OUTCLR = 0xf0;
+    PORTC.OUTCLR = 0xf0;
 
     switch (number) {
         case 0:
-            PORTD.OUTSET = 0b01111110;  // Combined bits of pins 1,2,3,4,5,6
+            TOP(); UL(); UR(); LL(); LR(); BOT();
         break;
         case 1:
-            PORTD.OUTSET = 0b01001000;  // etc.
+            UR(); LR();
         break;
         case 2:
-            PORTD.OUTSET = 0b00111101;
+            TOP(); UR(); MID(); LL(); BOT();
         break;
         case 3:
-            PORTD.OUTSET = 0b01101101;
+            TOP(); UR(); MID(); LR(); BOT();
         break;
         case 4:
-            PORTD.OUTSET = 0b01001011;
+            UL(); MID(); UR(); LR();
         break;
         case 5:
-            PORTD.OUTSET = 0b01100111;
+            TOP(); UL(); MID(); LR(); BOT();
         break;
         case 6:
-            PORTD.OUTSET = 0b01110111;
+            TOP(); UL(); MID(); LL(); LR(); BOT();
         break;
         case 7:
-            PORTD.OUTSET = 0b01001100;
+            TOP(); UR(); LR();
         break;
         case 8:
-            PORTD.OUTSET = 0b01111111;
+            TOP(); UL(); UR(); MID(); LL(); LR(); BOT();
         break;
         case 9:
-            PORTD.OUTSET = 0b01001111;
+            TOP(); UL(); MID(); UR(); LR();
         break;
         case -1:
             // For an input of -1, we clear the screen
-            PORTD.OUTSET = 0;
+            PORTD.OUTSET = 0xf0;
+            PORTC.OUTSET = 0xf0;
         break;
         default:
-            // For an input above 9, we light the decimal dot to indicate
+            // For an undefined input, we light the decimal dot to indicate
             // the number is out of range
-            if (number > 9) {
-                PORTD.OUTSET = PIN7_bm;
-            }
+            DOT();
     }
 }
-
