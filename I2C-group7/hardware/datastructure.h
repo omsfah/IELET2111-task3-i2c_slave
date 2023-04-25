@@ -76,7 +76,7 @@ typedef enum {
     ALARM_VEXT_HIGH = 4,
     ALARM_VEXT_LOW = 5,
     ALARM_VINT_HIGH = 6,
-    ALARM_VINT_LOW = 6,
+    ALARM_VINT_LOW = 7,
     ALARM_I2C_NOCONTACT = 8,
     unused_9
 
@@ -95,6 +95,7 @@ typedef struct {
     //measurements_t sensor_data[10]; // TODO: use an array so we can do mean values
     error_code_t error_code;
     bool error_code_has_changed;
+    uint8_t machine_state_size;
 } machine_state_t;
 
 

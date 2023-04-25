@@ -36,6 +36,7 @@ void MACHINE_STATE_init(void) {
     //   data structure
     //   EEPROM
     //   Reset controller?
+    machine_state.machine_state_size = sizeof(machine_state);
 
     machine_state.error_code_has_changed = false;
 }
@@ -61,20 +62,16 @@ void development_testing(void) {
     }
     */
 
-    // Write directly to I2C transmission_buffer for testing
-    transmission_buffer[0] = 13;
-    transmission_buffer[1] = 37;
-
+    printf("I2C: %d, ", machine_state.i2c_data.address);
+    printf("size: %d, ", machine_state.machine_state_size);
     // Testing fan monitor library
-    uint16_t fan1_freq = FAN_MONITOR_1_readFrequency();
-    uint16_t fan1_span = FAN_MONITOR_1_readSpan();
-    //printf("FAN1: %d, stddev: %d\n", fan1_freq, fan1_span);
+    /*
+    printf("FAN1: %d, ", machine_state.sensor_data.fan1_freq);
+    printf("FAN2: %d, ", machine_state.sensor_data.fan2_freq);
+    */
+    printf("\n");
 
-    uint16_t fan2_freq = FAN_MONITOR_2_readFrequency();
-    uint16_t fan2_span = FAN_MONITOR_2_readSpan();
-    printf("FAN2: %d, stddev: %d\n", fan2_freq, fan2_span);
-
-    //SEVEN_SEGMENT_showNumber(machine_state.sensor_data.dip_switch);
+    SEVEN_SEGMENT_showNumber(machine_state.sensor_data.dip_switch);
 
     LED_BUILTIN_toggle();
     _delay_ms(100);
@@ -122,30 +119,44 @@ void ALARM_SYSTEM_update(void) {
         break;
     }
 
-    // Error code decision
-    if (machine_state.sensor_data.vext > machine_state.threshold.VEXT_HIGH) {
-        machine_state.error_code = ALARM_VEXT_HIGH;
-        buzzer_state = BUZZER_CONSTANT_ON;
-    }
-    if (machine_state.sensor_data.vext < machine_state.threshold.VEXT_LOW) {
-        machine_state.error_code = ALARM_VEXT_LOW;
-        buzzer_state = BUZZER_CONSTANT_ON;
-    }
-    if (machine_state.sensor_data.vint > machine_state.threshold.VINT_HIGH) {
-        machine_state.error_code = ALARM_VINT_HIGH;
-        buzzer_state = BUZZER_CONSTANT_ON;
-    }
-    if (machine_state.sensor_data.vext > machine_state.threshold.VINT_LOW) {
-        machine_state.error_code = ALARM_VINT_LOW;
-        buzzer_state = BUZZER_CONSTANT_ON;
-    }
+    machine_state.error_code_has_changed = false;
+
+    // Error code decision. The last code to be checked will be standing in case
+    // of simultaneous errors.
+    //
+    // 0: First we assert there is no error
+    machine_state.error_code = 0;
+
+    // 1: checking temperature reading
     if (machine_state.sensor_data.temp > machine_state.threshold.TEMP_HIGH) {
         machine_state.error_code = ALARM_TEMPERATURE;
         buzzer_state = BUZZER_CONSTANT_ON;
     }
     // TODO:
-    // ALARM_SINGLE_FAN_FAILURE
-    // ALARM_BOTH_FAN_FAILURE
+    // 2: ALARM_SINGLE_FAN_FAILURE
+    // 3: ALARM_BOTH_FAN_FAILURE
+
+    // 4: checking if external 12V voltage is too high
+    if (machine_state.sensor_data.vext > machine_state.threshold.VEXT_HIGH) {
+        machine_state.error_code = ALARM_VEXT_HIGH;
+        buzzer_state = BUZZER_CONSTANT_ON;
+    }
+    // 5: checking if external 12V voltage is too low
+    if (machine_state.sensor_data.vext < machine_state.threshold.VEXT_LOW) {
+        machine_state.error_code = ALARM_VEXT_LOW;
+        buzzer_state = BUZZER_CONSTANT_ON;
+    }
+    // 6: checking if internal, regulated 5V voltage is too high
+    if (machine_state.sensor_data.vint > machine_state.threshold.VINT_HIGH) {
+        machine_state.error_code = ALARM_VINT_HIGH;
+        buzzer_state = BUZZER_CONSTANT_ON;
+    }
+    // 7: checking if internal, regulated 5V voltage is too low
+    if (machine_state.sensor_data.vext > machine_state.threshold.VINT_LOW) {
+        machine_state.error_code = ALARM_VINT_LOW;
+        buzzer_state = BUZZER_CONSTANT_ON;
+    }
+    // TODO:
     // ALARM_I2C_NOCONTACT
 
     // If builtin button (PB2) was pushed, we sum (disable) the alarm sound
@@ -157,5 +168,6 @@ void ALARM_SYSTEM_update(void) {
 
     // Write error code to the seven segment display
     //if (machine_state.error_code_has_changed)
-    SEVEN_SEGMENT_showNumber(machine_state.error_code);
+    //SEVEN_SEGMENT_showNumber(machine_state.error_code);
 }
+

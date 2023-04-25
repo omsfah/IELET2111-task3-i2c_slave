@@ -11,7 +11,8 @@
 #ifndef PROTOCOL_I2C_H_
 #define PROTOCOL_I2C_H_
 
-#define TRANSMISSION_BUFFER_SIZE 6
+#define TRANSMISSION_BUFFER_SIZE 53
+#define RECEIVE_BUFFER_SIZE 5
 
 #include <avr/io.h>
 
