@@ -44,24 +44,6 @@ void MACHINE_STATE_init(void) {
 void development_testing(void) {
     // While developing, we can test subsystems here
 
-    uint8_t data_buffer[9];     // TODO: temporary until we use the struct
-    //printf("VEXT: %d, ", machine_state.sensor_data.vext);
-    //printf("DIP: %d \r\n", machine_state.sensor_data.dip_switch);
-
-    // If master polls for information, send the register
-    /*
-    if (machine_state.i2c_data.data_ready) {
-        // (Temporary stuff for testing I2C)
-        cli();
-        memcpy(data_buffer, (const uint8_t *)transmission_buffer, 8);
-        sei();
-        data_buffer[8] = '\0';
-        printf("Received: %s\n", data_buffer);
-        SEVEN_SEGMENT_showNumber(data_buffer[0] - 48);
-        machine_state.i2c_data.data_ready = false;
-    }
-    */
-
     printf("I2C: %d, ", machine_state.i2c_data.address);
     printf("size: %d, ", machine_state.machine_state_size);
     // Testing fan monitor library
@@ -95,9 +77,8 @@ void MACHINE_STATE_update(void) {
 
     // Check I2C (save something about I2C status?)
 
-    // Update I2C address from DIP-switch
+    // Read DIP-switch
     machine_state.sensor_data.dip_switch = DIP4_read();
-    machine_state.i2c_data.address = machine_state.sensor_data.dip_switch + I2C_ADDRESS_OFFSET;
 
     development_testing();
 }

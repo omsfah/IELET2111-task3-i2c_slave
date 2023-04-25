@@ -13,12 +13,45 @@
 #define DATASTRUCTURE_H_
 
 
+typedef enum {
+    /* I2C commands reference.
+     *
+     *  series 0-9: Direct commands
+     *  series 10-19: Bulk transmission
+     *  series 20-99: Single value transmission
+     *  series 100-149: Threshold settings
+     */
+    NO_COMMAND = 0,
+    REBOOT = 1,
+    TEST_ALARM = 2,
+    SENDCONTAINER_MACHINE_STATE = 10,
+    SENDCONTAINER_SENSOR_DATA = 11,
+    SENDCONTAINER_THRESHOLDS = 12,
+    SEND_VEXT = 20,
+    SEND_VINT = 21,
+    SEND_TEMP = 22,
+    SEND_FAN1_FREQ = 30,
+    SEND_FAN1_SPAN = 31,
+    SEND_FAN1_OFFTIME = 32,
+    SEND_FAN2_FREQ = 40,
+    SEND_FAN2_SPAN = 41,
+    SEND_FAN2_OFFTIME = 42,
+    SEND_UPTIME = 50,
+    SEND_ALARM_STATE = 51,
+    SEND_ERROR_CODE = 52,
+    SET_THRESHOLD_VEXT_HIGH = 100,
+    SET_THRESHOLD_VEXT_LOW = 101,
+    SET_THRESHOLD_VINT_HIGH = 102,
+    SET_THRESHOLD_VINT_LOW = 103,
+    SET_THRESHOLD_TEMP_HIGH = 104,
+    SET_THRESHOLD_FAN_OFFTIME = 105,
+    SET_THRESHOLD_I2C_LASTCOMTIME = 106
+} I2C_COMMAND;
+
+
 typedef struct {
     /* Thresholds/maximum values for the systems
      * before alarm will go off */
-
-    // TODO: Decide if we should use ADC levels or actual (float) values.
-    //       Could also use millivolts (which simplifies the datatype)
 
     // External voltage adc level, [millivolts]
     uint16_t VEXT_HIGH;
@@ -28,21 +61,24 @@ typedef struct {
     uint16_t VINT_HIGH;
     uint16_t VINT_LOW;
 
-    uint16_t TEMP_HIGH;  // Temperature [celsius / 100]
+    uint16_t TEMP_HIGH;         // Temperature [celsius / 100]
     uint16_t FAN_OFFTIME;       // Time since fan stopped, [milliseconds]
     uint16_t I2C_LASTCOMTIME;   // Time since last communication with master, [milliseconds]
 } alarm_threshold_t;
 
 
 typedef struct {
-    /* Readings of sensors are represented here */
+    /* Readings of sensors are represented here.
+     *
+     * Note: A change in datatype here must also be reflected in
+     * 'I2C_parseCommand' in 'I2C.c'
+     * */
     
     uint8_t dip_switch;
     bool button_builtin;
     uint16_t vext;
     uint16_t vint;
     uint16_t temp;
-    uint16_t fan_speed;
     uint16_t fan1_freq;
     uint16_t fan2_freq;
     uint16_t fan1_span;
@@ -92,9 +128,9 @@ typedef struct {
     volatile alarm_threshold_t threshold;
     volatile measurements_t sensor_data;
     volatile i2c_data_t i2c_data;
-    //measurements_t sensor_data[10]; // TODO: use an array so we can do mean values
     error_code_t error_code;
     bool error_code_has_changed;
+    uint8_t alarm_state;
     uint8_t machine_state_size;
 } machine_state_t;
 

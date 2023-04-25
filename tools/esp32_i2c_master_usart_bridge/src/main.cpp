@@ -12,7 +12,7 @@
 
 
 static const uint16_t POLLING_DELAY_ms = 100;
-static const uint8_t PACKET_SIZE = 2;
+static const uint8_t PACKET_SIZE = 53;
 static const uint8_t TARGET_I2C_ADDRESS = 104;
 
 static const uint8_t DEBUG_INCREMENTER_MIN = 48;
@@ -85,18 +85,17 @@ void old(void) {
     Serial.printf("\n");
 }
 
-void command(uint8_t command_num, uint32_t value) {
+void sendCommand(uint8_t command_num, uint32_t value) {
     Wire.beginTransmission(TARGET_I2C_ADDRESS);
 
     Serial.printf("Command: %d value: %d\n", command_num, value);
 
     uint8_t _v4 = (uint8_t) (value);
-    uint8_t _v3 = (uint8_t) (value >> 4);
-    uint8_t _v2 = (uint8_t) (value >> 8);
-    uint8_t _v1 = (uint8_t) (value >> 12);
+    uint8_t _v3 = (uint8_t) (value >> 8);
+    uint8_t _v2 = (uint8_t) (value >> 16);
+    uint8_t _v1 = (uint8_t) (value >> 24);
 
     Wire.write(command_num);
-    //Wire.write(value);
     Wire.write(_v1);
     Wire.write(_v2);
     Wire.write(_v3);
@@ -140,9 +139,9 @@ void loop(void) {
     // In the loop, ESP32 polls the slave for data every POLLING_DELAY_ms
     delay(POLLING_DELAY_ms);
 
-    //request_data_from_target(32);
+    request_data_from_target(53);
     //old();
-    command(3, 31337);
+    //sendCommand(3, 31337);
     //send_incrementing_number();
     Serial.println();
 }
