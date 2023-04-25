@@ -38,11 +38,17 @@ typedef struct {
     /* Readings of sensors are represented here */
     
     uint8_t dip_switch;
+    bool button_builtin;
     uint16_t vext;
     uint16_t vint;
     uint16_t temp;
     uint16_t fan_speed;
-    uint16_t fan_offtime;
+    uint16_t fan1_freq;
+    uint16_t fan2_freq;
+    uint16_t fan1_span;
+    uint16_t fan2_span;
+    uint16_t fan1_offtime;
+    uint16_t fan2_offtime;
     uint32_t uptime;
 } measurements_t;
 
@@ -57,6 +63,7 @@ typedef struct {
     bool new_settings_flag;
     bool data_ready;
     bool data_was_read;
+    uint32_t last_contact;
 } i2c_data_t;
 
 

@@ -78,7 +78,7 @@ void I2C_SYSTEM_update(void) {
     // If the 'new_settings_flag' is set, copy the new
     // threshold values over to the 'machine_state'
 
-    // We copy 
+    //machine_state.i2c_data.last_contact = timer_sample();
 
     // Update I2C address
     I2C_setAddress(machine_state.i2c_data.address);
