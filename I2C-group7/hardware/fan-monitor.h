@@ -19,7 +19,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#include "util/stat.h"
+#include "../util/stat.h"
 
 #define FAN_MEAS_BUFFER_SIZE 16
 

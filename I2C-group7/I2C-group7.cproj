@@ -148,6 +148,12 @@
     <Compile Include="hardware\dip-switch.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="hardware\fan-monitor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="hardware\fan-monitor.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="hardware\seven-segment.c">
       <SubType>compile</SubType>
     </Compile>
@@ -196,10 +202,17 @@
     <Compile Include="protocol\logging.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="util\stat.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="util\stat.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="hardware\" />
     <Folder Include="lib\" />
+    <Folder Include="util" />
     <Folder Include="protocol\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
