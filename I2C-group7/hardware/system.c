@@ -68,8 +68,10 @@ void development_testing(void) {
     uint16_t fan2_span = FAN_MONITOR_2_readSpan();
     printf("FAN2: %d, stddev: %d\n", fan2_freq, fan2_span);
 
+    SEVEN_SEGMENT_showNumber(machine_state.sensor_data.dip_switch);
+
     LED_BUILTIN_toggle();
-    //_delay_ms(100);
+    _delay_ms(100);
 }
 
 void MACHINE_STATE_update(void) {

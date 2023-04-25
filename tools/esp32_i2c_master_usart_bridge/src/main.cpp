@@ -11,7 +11,7 @@
 #include <Wire.h>
 
 
-static const uint16_t POLLING_DELAY_ms = 10;
+static const uint16_t POLLING_DELAY_ms = 1000;
 static const uint8_t PACKET_SIZE = 2;
 static const uint8_t TARGET_I2C_ADDRESS = 104;
 
@@ -30,8 +30,7 @@ void print_buffer(uint8_t bytes) {
     Serial.println();
 }
 
-void request_data_from_target(void) {
-    //Serial.printf("sending '0' (request data)\n");
+void request_data_from_target(uint8_t bytes) {
     Serial.printf("requesting data from target\n");
     Wire.beginTransmission(TARGET_I2C_ADDRESS);
 
@@ -39,7 +38,7 @@ void request_data_from_target(void) {
     uint8_t i2c_send_result = Wire.endTransmission(true);
     Serial.printf("endTransmission: %u\n", i2c_send_result);
 
-    uint8_t bytes_received = Wire.requestFrom(TARGET_I2C_ADDRESS, PACKET_SIZE);
+    uint8_t bytes_received = Wire.requestFrom(TARGET_I2C_ADDRESS, bytes);
     Serial.printf("reading %u bytes from target\n", bytes_received);
     Wire.readBytes(data_buffer, bytes_received);    // Move data into buffer
 
@@ -86,6 +85,23 @@ void old(void) {
     Serial.printf("\n");
 }
 
+void send_incrementing_number(void) {
+    // Establish communication of address packet
+    Wire.beginTransmission(TARGET_I2C_ADDRESS);
+
+    number++;
+    if (number > DEBUG_INCREMENTER_MAX) {
+        number = DEBUG_INCREMENTER_MIN;
+    }
+    Serial.printf("Sending data: %d\n", number);
+    Wire.write(number);
+
+    // End transmission and record potential error code
+    uint8_t i2c_send_result = Wire.endTransmission(true);
+    Serial.printf("endTransmission: %u\n", i2c_send_result);
+
+}
+
 void setup(void) {
     Serial.begin(115200);
     Serial.setDebugOutput(true);
@@ -99,7 +115,8 @@ void loop(void) {
     // In the loop, ESP32 polls the slave for data every POLLING_DELAY_ms
     delay(POLLING_DELAY_ms);
 
-    //request_data_from_target();
-    old();
+    request_data_from_target(2);
+    //old();
+    //send_incrementing_number();
     Serial.println();
 }

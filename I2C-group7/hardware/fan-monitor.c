@@ -44,12 +44,12 @@ ISR(TCB1_INT_vect) {
 
 
 void FAN_MONITOR_init(void) {
-    // For the two fans monitors, we use pins PE3 and PE7 which are
-    // hard-wired to ZCIN1 and ZCIN2.
+    // For the two fans monitors, we use pins PD1 and PE3 which are
+    // hard-wired to ZCIN0 and ZCIN1.
     PORTD.PIN1CTRL = PORT_ISC_INPUT_DISABLE_gc; // FAN 1
     PORTE.PIN3CTRL = PORT_ISC_INPUT_DISABLE_gc; // FAN 2
 
-    // Enable zero cross detectors 1 and 2
+    // Enable zero cross detectors 0 and 1
     ZCD0.CTRLA |= ZCD_ENABLE_bm | ZCD_OUTEN_bm;
     ZCD1.CTRLA |= ZCD_ENABLE_bm | ZCD_OUTEN_bm;
 
@@ -58,7 +58,7 @@ void FAN_MONITOR_init(void) {
     TCB0.EVCTRL = TCB_CAPTEI_bm;        // Enable event input
     TCB0.INTCTRL = TCB_CAPT_bm;         // Enable capture or timeout
 
-    // Set up the TCB0 timer for FAN 2
+    // Set up the TCB1 timer for FAN 2
     TCB1.CTRLB = TCB_CNTMODE_FRQ_gc;    // Input capture freqency
     TCB1.EVCTRL = TCB_CAPTEI_bm;        // Enable event input
     TCB1.INTCTRL = TCB_CAPT_bm;         // Enable capture or timeout
@@ -69,7 +69,7 @@ void FAN_MONITOR_init(void) {
 
     // Set up event system to link the zero cross detectors to timers
     EVSYS.CHANNEL0 = EVSYS_CHANNEL0_ZCD0_gc; // Link ZCD0 to event channel 0
-    EVSYS.CHANNEL1 = EVSYS_CHANNEL0_ZCD1_gc; // Link ZCD1 to event channel 1
+    EVSYS.CHANNEL1 = EVSYS_CHANNEL1_ZCD1_gc; // Link ZCD1 to event channel 1
     EVSYS.USERTCB0CAPT = EVSYS_CHANNEL00_bm; // Link TCB0 to event channel 0
     EVSYS.USERTCB1CAPT = EVSYS_CHANNEL01_bm; // Link TCB1 to event channel 1
 }
