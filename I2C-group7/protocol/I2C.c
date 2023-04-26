@@ -212,19 +212,27 @@ void I2C_SYSTEM_update(void) {
     /* I2C housekeeping function exposed to 'main' */
 
     // We reset the transmission buffer with zeros
-    memset(transmission_buffer, 0, TRANSMISSION_BUFFER_SIZE);
+    //memset(transmission_buffer, 0, TRANSMISSION_BUFFER_SIZE);
+
+    cli();
+    memcpy(transmission_buffer, &machine_state, TRANSMISSION_BUFFER_SIZE);  // remove this
+    sei();
 
     // Here we parse and execute the command if there is any
-    I2C_parseCommand(receive_buffer[0]);
+    if (machine_state.i2c_data.new_settings_flag) {
+        //I2C_parseCommand(receive_buffer[0]);
+        machine_state.i2c_data.new_settings_flag = false;
+        //memset(receive_buffer, 0, RECEIVE_BUFFER_SIZE);
+    }
 
     //machine_state.i2c_data.last_contact = timer_sample();
 
+    printf("CMD: %d, ", receive_buffer[0]);
     printf("trans: ");
     printRegister(transmission_buffer, TRANSMISSION_BUFFER_SIZE);
-    printf(", ");
     printf("recv: ");
     printRegister(receive_buffer, RECEIVE_BUFFER_SIZE);
-    printf(", ");
+    printf("\n");
 
     // Update I2C address
     machine_state.i2c_data.address = machine_state.sensor_data.dip_switch + I2C_ADDRESS_OFFSET;

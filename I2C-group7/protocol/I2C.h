@@ -11,7 +11,7 @@
 #ifndef PROTOCOL_I2C_H_
 #define PROTOCOL_I2C_H_
 
-#define TRANSMISSION_BUFFER_SIZE 53
+#define TRANSMISSION_BUFFER_SIZE 52
 #define RECEIVE_BUFFER_SIZE 5
 
 #include <avr/io.h>
@@ -25,8 +25,5 @@
 void I2C_init(twi_address_t I2C_address);
 void I2C_setAddress(twi_address_t I2C_address);
 void I2C_SYSTEM_update();
-
-extern volatile uint8_t transmission_buffer[TRANSMISSION_BUFFER_SIZE];
-
 
 #endif

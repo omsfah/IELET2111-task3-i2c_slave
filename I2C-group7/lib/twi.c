@@ -110,19 +110,19 @@ ISR(TWI0_TWIS_vect) {
             TWI0.SCTRLB = TWI_ACKACT_ACK_gc | TWI_SCMD_RESPONSE_gc;
         }
 
-        if (TWI0.SSTATUS & ~TWI_AP_STOP_gc) {
+        else {
             // Scenario C.
-
-            // We call the user defined callback function
-            TWI0_TARGET_onStop();
 
             // We send 'NACK' and end transaction with the COMPTRANS command
             TWI0.SCTRLB = TWI_ACKACT_NACK_gc | TWI_SCMD_COMPTRANS_gc;
+
+            // We call the user defined callback function
+            TWI0_TARGET_onStop();
         }
     }
 
     // Data interrupt. Scenario D or E
-    if (TWI0.SSTATUS & TWI_DIF_bm) {
+    else if (TWI0.SSTATUS & TWI_DIF_bm) {
         bool direction = (TWI0.SSTATUS & TWI_DIR_bm) >> TWI_DIR_bp;
 
         if (direction == 0) {
@@ -132,7 +132,7 @@ ISR(TWI0_TWIS_vect) {
             TWI0_TARGET_onReceive(TWI0.SDATA);
         }
 
-        if (direction == 1) {
+        else if (direction == 1) {
             // Scenario E: if direction bit is 1, we send data to controller
 
             // We get the byte from the user defined callback function

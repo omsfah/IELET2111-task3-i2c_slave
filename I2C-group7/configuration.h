@@ -12,7 +12,7 @@
 #define F_CPU 4000000UL
 
 // We reserve the 100-107 series for I2C targets
-#define I2C_TARGET_DEFAULT_ADDRESS 4
+#define I2C_TARGET_DEFAULT_ADDRESS 104
 #define I2C_ADDRESS_OFFSET 100
 
 // Debug printing config
