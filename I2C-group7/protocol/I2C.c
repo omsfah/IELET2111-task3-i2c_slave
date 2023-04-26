@@ -17,9 +17,7 @@ volatile uint8_t receive_buffer[RECEIVE_BUFFER_SIZE];
 twi_receive_callback_t onReceive(uint8_t data) {
     /* Routine for every time we receive a byte on the I2C bus */
 
-    if (receive_buffer_index == RECEIVE_BUFFER_SIZE) {
-        machine_state.i2c_data.new_settings_flag = true;
-    }
+    machine_state.i2c_data.new_command_flag = true;
 
     // As long as there is space in the buffer, we write the byte
     // to it and increment the index.
@@ -115,6 +113,7 @@ void I2C_parseCommand(I2C_COMMAND command) {
      *  See the I2C_COMMAND type definition in datastructure.h for a full
      *  list of available commands.
      */
+    printf("\nExecuting: %d, %d\n", command, U32_FROM_RECV());
 
     cli();  // Disable interrupts while we parse the command
 
@@ -180,7 +179,7 @@ void I2C_parseCommand(I2C_COMMAND command) {
             memcpy(transmission_buffer, &machine_state.error_code, sizeof(machine_state.error_code));
         break;
 
-        // Command series 100-150: Controller demands a change of a threshold value
+        // Command series 100-149: Controller demands a change of a threshold value
         case SET_THRESHOLD_VEXT_HIGH:
             machine_state.threshold.VEXT_HIGH = U16_FROM_RECV();
         break;
@@ -214,15 +213,11 @@ void I2C_SYSTEM_update(void) {
     // We reset the transmission buffer with zeros
     //memset(transmission_buffer, 0, TRANSMISSION_BUFFER_SIZE);
 
-    cli();
-    memcpy(transmission_buffer, &machine_state, TRANSMISSION_BUFFER_SIZE);  // remove this
-    sei();
-
     // Here we parse and execute the command if there is any
-    if (machine_state.i2c_data.new_settings_flag) {
-        //I2C_parseCommand(receive_buffer[0]);
-        machine_state.i2c_data.new_settings_flag = false;
-        //memset(receive_buffer, 0, RECEIVE_BUFFER_SIZE);
+    if (machine_state.i2c_data.new_command_flag) {
+        I2C_parseCommand(receive_buffer[0]);
+        machine_state.i2c_data.new_command_flag = false;
+        memset(receive_buffer, 0, RECEIVE_BUFFER_SIZE);
     }
 
     //machine_state.i2c_data.last_contact = timer_sample();

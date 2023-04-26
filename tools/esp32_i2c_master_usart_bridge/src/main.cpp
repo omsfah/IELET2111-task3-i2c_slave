@@ -10,15 +10,13 @@
 #include <Arduino.h>
 #include <Wire.h>
 
+//#include "../../../I2C-group7/hardware/datastructure.h"
 
-static const uint16_t POLLING_DELAY_ms = 100;
-static const uint8_t PACKET_SIZE = 53;
+
+static const uint16_t POLLING_DELAY_ms = 1000;
+static const uint8_t PACKET_SIZE = 52;
 static const uint8_t TARGET_I2C_ADDRESS = 104;
 
-static const uint8_t DEBUG_INCREMENTER_MIN = 48;
-static const uint8_t DEBUG_INCREMENTER_MAX = 57;
-
-uint8_t number = DEBUG_INCREMENTER_MIN;
 uint8_t data_buffer[PACKET_SIZE] = {0};
 
 
@@ -33,6 +31,8 @@ void printBuffer(uint8_t bytes) {
 
 
 void sendCommand(uint8_t command_num, uint32_t value) {
+    /* Send command and value to target */
+
     Serial.printf("Command: %d value: %d\n", command_num, value);
     Wire.beginTransmission(TARGET_I2C_ADDRESS);
 
@@ -52,21 +52,36 @@ void sendCommand(uint8_t command_num, uint32_t value) {
     // End transmission and record potential error code
     uint8_t i2c_send_result = Wire.endTransmission(true);
     Serial.printf("endTransmission: %u\n", i2c_send_result);
+    Serial.println();
+}
 
-    // Read bytes from slave
-    uint8_t bytes_received = Wire.requestFrom(TARGET_I2C_ADDRESS, PACKET_SIZE);
-    Serial.printf("requestFrom: %u\n", bytes_received);
+void requestBytes(uint8_t bytes_requested) {
+    /* Request a number of bytes from the target */
+
+    Serial.printf("requesting %u bytes\n", bytes_requested);
+    uint8_t bytes_received = Wire.requestFrom(TARGET_I2C_ADDRESS, bytes_requested);
+    Serial.printf("received %u bytes\n", bytes_received);
     Wire.readBytes(data_buffer, bytes_received);    // Move data into buffer
+    uint8_t i2c_send_result = Wire.endTransmission(true);
+    Serial.printf("endTransmission: %u\n", i2c_send_result);
 
     printBuffer(bytes_received);
+}
+
+void demoCommandSystem(void) {
+    sendCommand(100, 3);        // SET_THRESHOLD_VEXT_HIGH
+    sendCommand(101, 0xff);     // SET_THRESHOLD_VEXT_LOW
+    sendCommand(102, 0xff);
+    sendCommand(103, 0xff);
+    sendCommand(104, 0xff);
+    sendCommand(105, 0xff);
+    sendCommand(106, 0xff);
 }
 
 void setup(void) {
     Serial.begin(115200);
     Serial.setDebugOutput(true);
-    //Wire.end();
     Wire.begin();   // Default SDA 21, SCL 22
-
     Serial.println("hello there");
 }
 
@@ -74,6 +89,11 @@ void loop(void) {
     // In the loop, ESP32 polls the slave for data every POLLING_DELAY_ms
     delay(POLLING_DELAY_ms);
 
-    sendCommand(0x64, 0x1ff);
+    demoCommandSystem();
+
+    sendCommand(10, 0);   // Send a command to target
+    requestBytes(52);           // Request data from target
+
     Serial.println();
 }
+

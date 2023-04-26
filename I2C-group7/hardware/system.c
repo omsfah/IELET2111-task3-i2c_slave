@@ -57,7 +57,7 @@ void development_testing(void) {
     SEVEN_SEGMENT_showNumber(machine_state.sensor_data.dip_switch);
 
     LED_BUILTIN_toggle();
-    _delay_ms(500);
+    //_delay_ms(500);
 }
 
 void MACHINE_STATE_update(void) {

@@ -96,7 +96,7 @@ typedef struct {
 
     uint8_t address;
     bool data_request_flag;
-    bool new_settings_flag;
+    bool new_command_flag;
     bool data_ready;
     bool data_was_read;
     uint32_t last_contact;
