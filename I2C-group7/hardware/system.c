@@ -44,19 +44,20 @@ void MACHINE_STATE_init(void) {
 void development_testing(void) {
     // While developing, we can test subsystems here
 
+    printf("\n");
     printf("I2C: %d, ", machine_state.i2c_data.address);
     printf("size: %d, ", machine_state.machine_state_size);
     // Testing fan monitor library
-    /*
-    printf("FAN1: %d, ", machine_state.sensor_data.fan1_freq);
-    printf("FAN2: %d, ", machine_state.sensor_data.fan2_freq);
-    */
+    printf("FAN1 freq: %d, ", machine_state.sensor_data.fan1_freq);
+    printf("span: %d, ", machine_state.sensor_data.fan1_span);
+    printf("FAN2 freq: %d, ", machine_state.sensor_data.fan2_freq);
+    printf("span: %d, ", machine_state.sensor_data.fan2_span);
     printf("\n");
 
     SEVEN_SEGMENT_showNumber(machine_state.sensor_data.dip_switch);
 
     LED_BUILTIN_toggle();
-    _delay_ms(100);
+    _delay_ms(500);
 }
 
 void MACHINE_STATE_update(void) {

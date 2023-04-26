@@ -14,6 +14,8 @@ volatile uint8_t fan2_buffer_index = 0;
 ISR(TCB0_INT_vect) {
     /* ISR for FAN 1 frequency count event */
 
+    cli();  // Disable interrupts
+
     // We store the current value into the fan frequency buffer
     fan1_freq[fan1_buffer_index] = TCB0.CCMP;
 
@@ -24,11 +26,14 @@ ISR(TCB0_INT_vect) {
     else {
         fan1_buffer_index = 0;
     }
+    sei();  // Re-enable interrupts
 }
 
 
 ISR(TCB1_INT_vect) {
     /* ISR for FAN 2 frequency count event */
+
+    cli();  // Disable interrupts
 
     // We store the current value into the fan frequency buffer
     fan2_freq[fan2_buffer_index] = TCB1.CCMP;
@@ -40,6 +45,7 @@ ISR(TCB1_INT_vect) {
     else {
         fan2_buffer_index = 0;
     }
+    sei();  // Re-enable interrupts
 }
 
 
@@ -69,9 +75,11 @@ void FAN_MONITOR_init(void) {
 
     // Set up event system to link the zero cross detectors to timers
     EVSYS.CHANNEL0 = EVSYS_CHANNEL0_ZCD0_gc; // Link ZCD0 to event channel 0
-    EVSYS.CHANNEL1 = EVSYS_CHANNEL1_ZCD1_gc; // Link ZCD1 to event channel 1
+    EVSYS.CHANNEL2 = EVSYS_CHANNEL2_ZCD1_gc; // Link ZCD1 to event channel 2
     EVSYS.USERTCB0CAPT = EVSYS_CHANNEL00_bm; // Link TCB0 to event channel 0
-    EVSYS.USERTCB1CAPT = EVSYS_CHANNEL01_bm; // Link TCB1 to event channel 1
+    EVSYS.USERTCB1CAPT = EVSYS_CHANNEL02_bm; // Link TCB1 to event channel 2
+
+    sei();
 }
 
 uint16_t FAN_MONITOR_1_readSpan(void) {

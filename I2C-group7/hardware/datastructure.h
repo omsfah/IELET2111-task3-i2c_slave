@@ -125,12 +125,12 @@ typedef enum {
 typedef struct {
     /* Container data structure for the whole machine state */
 
+    volatile i2c_data_t i2c_data;
     volatile alarm_threshold_t threshold;
     volatile measurements_t sensor_data;
-    volatile i2c_data_t i2c_data;
-    error_code_t error_code;
     bool error_code_has_changed;
     uint8_t alarm_state;
+    error_code_t error_code;
     uint8_t machine_state_size;
 } machine_state_t;
 

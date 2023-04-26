@@ -5,9 +5,11 @@
  * two 5-bladed fans. Implementation is specific to the 
  * fan/voltage monitoring system.
  *
- * pins:
+ * pins and systems:
  *  PD1: Zero cross detection of AC coupled FAN 1, using TCB0
+ *       through EVSYS channel 0
  *  PE3: Zero cross detection of AC coupled FAN 2, using TCB1
+ *       through EVSYS channel 2
  *
  * board: AVR128DB48 Curiosity Nano
  *
