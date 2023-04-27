@@ -80,10 +80,10 @@ typedef struct {
     uint16_t vint;
     uint16_t temp;
     uint16_t fan1_freq;
-    uint16_t fan2_freq;
     uint16_t fan1_span;
-    uint16_t fan2_span;
     uint16_t fan1_offtime;
+    uint16_t fan2_freq;
+    uint16_t fan2_span;
     uint16_t fan2_offtime;
     uint32_t uptime;
 } measurements_t;
@@ -95,10 +95,6 @@ typedef struct {
      * interrupts, it must be instantiated as volatile. */
 
     uint8_t address;
-    bool data_request_flag;
-    bool new_command_flag;
-    bool data_ready;
-    bool data_was_read;
     uint32_t last_contact;
 } i2c_data_t;
 

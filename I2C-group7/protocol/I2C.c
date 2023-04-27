@@ -17,7 +17,14 @@ volatile uint8_t receive_buffer[RECEIVE_BUFFER_SIZE];
 twi_receive_callback_t onReceive(uint8_t data) {
     /* Routine for every time we receive a byte on the I2C bus */
 
-    machine_state.i2c_data.new_command_flag = true;
+    if (receive_buffer_index == RECEIVE_BUFFER_SIZE-1) {
+        // When the receive buffer is full, we call the command
+        // parser to decide what to do with the data
+        I2C_parseCommand(receive_buffer[0]);
+
+        // After parsing the received command, we empty the receive buffer
+        memset(receive_buffer, 0, RECEIVE_BUFFER_SIZE);
+    }
 
     // As long as there is space in the buffer, we write the byte
     // to it and increment the index.
@@ -50,13 +57,6 @@ twi_stop_callback_t onStop(void) {
     // Reset the buffer array indexes
     receive_buffer_index = 0;
     transmission_buffer_index = 0;
-
-    if (!machine_state.i2c_data.data_was_read) {
-        machine_state.i2c_data.data_ready = true;
-    }
-    else {
-        machine_state.i2c_data.data_was_read = false;
-    }
 }
 
 
@@ -87,19 +87,31 @@ void printRegister(uint8_t array[], uint8_t len) {
     }
 }
 
+
+void printBothBuffers(void) {
+    // Development printing
+    printf("\n");
+    printf("trans: ");
+    printRegister(transmission_buffer, TRANSMISSION_BUFFER_SIZE);
+    printf("recv: ");
+    printRegister(receive_buffer, RECEIVE_BUFFER_SIZE);
+    printf(" ");
+}
+
+
 uint8_t U8_FROM_RECV(void) {
     /* Cast the received value as uint8_t */
-    return receive_buffer[5];
+    return receive_buffer[4];
 }
 
 uint16_t U16_FROM_RECV(void) {
     /* Cast the received value as uint16_t */
-    return receive_buffer[5] + receive_buffer[4]*256;
+    return receive_buffer[4] + (receive_buffer[3]<<8);
 }
 
 uint32_t U32_FROM_RECV(void) {
     /* Cast the received value as uint32_t */
-    return receive_buffer[5] + receive_buffer[4]*256 + receive_buffer[3]*65536 + receive_buffer[2]*16777216;
+    return receive_buffer[4] + (receive_buffer[3]<<8) + (receive_buffer[2]<<16) + (receive_buffer[1]<<24);
 }
 
 
@@ -112,8 +124,10 @@ void I2C_parseCommand(I2C_COMMAND command) {
      *
      *  See the I2C_COMMAND type definition in datastructure.h for a full
      *  list of available commands.
+     *
+     *  This function is called by the receive ISR when the receive buffer
+     *  is full.
      */
-    printf("\nExecuting: %d, %d\n", command, U32_FROM_RECV());
 
     cli();  // Disable interrupts while we parse the command
 
@@ -203,6 +217,9 @@ void I2C_parseCommand(I2C_COMMAND command) {
         break;
     }
 
+    memcpy(transmission_buffer, &machine_state, TRANSMISSION_BUFFER_SIZE);
+    printBothBuffers();
+
     sei();  // Re-enable interrupts
 }
 
@@ -210,24 +227,7 @@ void I2C_parseCommand(I2C_COMMAND command) {
 void I2C_SYSTEM_update(void) {
     /* I2C housekeeping function exposed to 'main' */
 
-    // We reset the transmission buffer with zeros
-    //memset(transmission_buffer, 0, TRANSMISSION_BUFFER_SIZE);
-
-    // Here we parse and execute the command if there is any
-    if (machine_state.i2c_data.new_command_flag) {
-        I2C_parseCommand(receive_buffer[0]);
-        machine_state.i2c_data.new_command_flag = false;
-        memset(receive_buffer, 0, RECEIVE_BUFFER_SIZE);
-    }
-
     //machine_state.i2c_data.last_contact = timer_sample();
-
-    printf("CMD: %d, ", receive_buffer[0]);
-    printf("trans: ");
-    printRegister(transmission_buffer, TRANSMISSION_BUFFER_SIZE);
-    printf("recv: ");
-    printRegister(receive_buffer, RECEIVE_BUFFER_SIZE);
-    printf("\n");
 
     // Update I2C address
     machine_state.i2c_data.address = machine_state.sensor_data.dip_switch + I2C_ADDRESS_OFFSET;

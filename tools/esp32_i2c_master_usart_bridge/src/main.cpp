@@ -13,7 +13,7 @@
 //#include "../../../I2C-group7/hardware/datastructure.h"
 
 
-static const uint16_t POLLING_DELAY_ms = 1000;
+static const uint16_t POLLING_DELAY_ms = 1;
 static const uint8_t PACKET_SIZE = 52;
 static const uint8_t TARGET_I2C_ADDRESS = 104;
 
@@ -53,6 +53,7 @@ void sendCommand(uint8_t command_num, uint32_t value) {
     uint8_t i2c_send_result = Wire.endTransmission(true);
     Serial.printf("endTransmission: %u\n", i2c_send_result);
     Serial.println();
+    delay(10);
 }
 
 void requestBytes(uint8_t bytes_requested) {
@@ -66,17 +67,41 @@ void requestBytes(uint8_t bytes_requested) {
     Serial.printf("endTransmission: %u\n", i2c_send_result);
 
     printBuffer(bytes_received);
+    delay(10);
 }
 
-void demoCommandSystem(void) {
-    sendCommand(100, 3);        // SET_THRESHOLD_VEXT_HIGH
-    sendCommand(101, 0xff);     // SET_THRESHOLD_VEXT_LOW
-    sendCommand(102, 0xff);
-    sendCommand(103, 0xff);
-    sendCommand(104, 0xff);
-    sendCommand(105, 0xff);
-    sendCommand(106, 0xff);
+namespace test {
+    void transmissionBufferSwitching(void) {
+        /* Request the whole transmission buffer 10 times, then
+         * the temperature 10 times. */
+        Serial.println("[Running test]: transmissionBufferSwitching");
+
+        for (auto i = 0; i<3; i++) {
+            sendCommand(10, 0); // Command 'machine_state' to be sent
+            requestBytes(52);   // Request 52 bytes and print
+        }
+        for (auto i = 0; i<3; i++) {
+            sendCommand(22, 0); // Command 'SEND_TEMP'
+            requestBytes(52);   // Request 52 bytes and print
+        }
+    }
+
+    void setAllThresholds(void) {
+        /* Command a change of all thresholds */
+        Serial.println("[Running test]: setAllThresholds");
+
+        for (auto val = 0; val < 3; val++) {
+            sendCommand(100, val);
+            sendCommand(101, val);
+            sendCommand(102, val);
+            sendCommand(103, val);
+            sendCommand(104, val);
+            sendCommand(105, val);
+            sendCommand(106, val);
+        }
+    }
 }
+
 
 void setup(void) {
     Serial.begin(115200);
@@ -86,14 +111,9 @@ void setup(void) {
 }
 
 void loop(void) {
-    // In the loop, ESP32 polls the slave for data every POLLING_DELAY_ms
-    delay(POLLING_DELAY_ms);
+    delay(1000);
 
-    demoCommandSystem();
-
-    sendCommand(10, 0);   // Send a command to target
-    requestBytes(52);           // Request data from target
-
-    Serial.println();
+    test::transmissionBufferSwitching();
+    test::setAllThresholds();
 }
 
