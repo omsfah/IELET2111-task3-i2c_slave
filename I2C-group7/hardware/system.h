@@ -25,12 +25,15 @@
 #include "../lib/adc.h"
 #include "../lib/builtins.h"
 
+
 #include "../protocol/I2C.h"
 #include "../protocol/logging.h"
 
 #include "datastructure.h"
 #include "dip-switch.h"
 #include "seven-segment.h"
+#include "thermistor.h"
+#include "voltages.h"
 
 void SYSTEMS_init(void);
 

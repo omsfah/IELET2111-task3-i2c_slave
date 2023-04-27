@@ -57,3 +57,7 @@ uint16_t ADC0_readSingle(PORT_SELECT port, uint8_t pin){
 	
 	return ADC0.RES;
 }
+double ADC0_readVoltage(PORT_SELECT port, uint8_t pin)
+{
+	return ADC0_readSingle(port, pin)*(3.3/1024.0);
+}

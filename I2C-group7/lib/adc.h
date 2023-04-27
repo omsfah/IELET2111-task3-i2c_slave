@@ -33,8 +33,6 @@ typedef enum {
 
 void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode);
 uint16_t ADC0_readSingle(PORT_SELECT port, uint8_t pin);
-void ADC0_start(void);
-bool ADC0_conversionDone(void);
-
+double ADC0_readVoltage(PORT_SELECT port, uint8_t pin);
 
 #endif
