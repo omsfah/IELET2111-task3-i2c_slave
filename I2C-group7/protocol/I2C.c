@@ -23,7 +23,7 @@ twi_receive_callback_t onReceive(uint8_t data) {
         I2C_parseCommand(receive_buffer[0]);
 
         // After parsing the received command, we empty the receive buffer
-        memset(receive_buffer, 0, RECEIVE_BUFFER_SIZE);
+        memset(&receive_buffer, 0, RECEIVE_BUFFER_SIZE);
     }
 
     // As long as there is space in the buffer, we write the byte
@@ -57,6 +57,8 @@ twi_stop_callback_t onStop(void) {
     // Reset the buffer array indexes
     receive_buffer_index = 0;
     transmission_buffer_index = 0;
+
+    //memset(&receive_buffer, 0, RECEIVE_BUFFER_SIZE);
 }
 
 
@@ -93,9 +95,10 @@ void printBothBuffers(void) {
     printf("\n");
     printf("trans: ");
     printRegister(transmission_buffer, TRANSMISSION_BUFFER_SIZE);
-    printf("recv: ");
+    printf(" recv: ");
     printRegister(receive_buffer, RECEIVE_BUFFER_SIZE);
     printf(" ");
+    printf("size: %d", machine_state.machine_state_size);
 }
 
 
@@ -122,9 +125,10 @@ uint32_t U32_FROM_RECV(void) {
  * and overwrite the transmission buffer during receive interrupts.
  */
 #define I2C_TRANSBUF_MUX(x) {\
-    memset(transmission_buffer, 0, TRANSMISSION_BUFFER_SIZE); \
     memcpy(transmission_buffer, &x, sizeof(x)); \
 }
+
+//memset(transmission_buffer, 0, TRANSMISSION_BUFFER_SIZE); \
     
 
 void I2C_parseCommand(I2C_COMMAND command) {
@@ -155,6 +159,9 @@ void I2C_parseCommand(I2C_COMMAND command) {
 
         case TEST_ALARM:
             // TODO: not implemented
+        break;
+        case USART_DEBUG_PRINT_ONCE:
+            printBothBuffers();
         break;
 
         // Command series 10-19: Controller requests transmission of a data container
@@ -229,8 +236,6 @@ void I2C_parseCommand(I2C_COMMAND command) {
             machine_state.threshold.I2C_LASTCOMTIME = U16_FROM_RECV();
         break;
     }
-
-    printBothBuffers(); // TODO: remove
 
     sei();  // Re-enable interrupts
 }

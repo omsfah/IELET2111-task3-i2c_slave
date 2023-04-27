@@ -3,14 +3,6 @@
 // Here we instantiate the global machine state data structure
 machine_state_t machine_state;
 
-// We instantiate the alarm buzzer state machine
-typedef enum {
-    BUZZER_OFF = 0,
-    BUZZER_CONSTANT_ON = 1,
-    BUZZER_SUMMED = 2
-} BUZZER_STATE_T;
-BUZZER_STATE_T buzzer_state;
-
 
 void SYSTEMS_init(void) {
     BUTTON_BUILTIN_init();
@@ -56,14 +48,16 @@ void development_testing(void) {
     printf("\n");
     */
 
-    SEVEN_SEGMENT_showNumber(machine_state.sensor_data.dip_switch);
+    //SEVEN_SEGMENT_showNumber(machine_state.sensor_data.dip_switch);
 
     LED_BUILTIN_toggle();
-    //_delay_ms(500);
+    _delay_ms(500);
 }
 
 void MACHINE_STATE_update(void) {
     /* Update 'machine_state' with new readings */
+
+    //memset(machine_state
 
     // Check external voltage
     machine_state.sensor_data.vext = ADC0_readSingle(PORT_E, 0);
@@ -82,6 +76,8 @@ void MACHINE_STATE_update(void) {
 
     // Read DIP-switch
     machine_state.sensor_data.dip_switch = DIP4_read();
+    machine_state.machine_state_size = sizeof(machine_state);
+    //printf("\n size: %d \n", machine_state.machine_state_size);
 
     development_testing();
 }
@@ -92,7 +88,7 @@ void ALARM_SYSTEM_update(void) {
      * buzzer alarm */
 
     // Decide action for the alarm state machine
-    switch (buzzer_state) {
+    switch (machine_state.buzzer_state) {
         case BUZZER_OFF:
             // TODO: Ensure the alarm is not on
         break;
@@ -114,7 +110,7 @@ void ALARM_SYSTEM_update(void) {
     // 1: checking temperature reading
     if (machine_state.sensor_data.temp > machine_state.threshold.TEMP_HIGH) {
         machine_state.error_code = ALARM_TEMPERATURE;
-        buzzer_state = BUZZER_CONSTANT_ON;
+        machine_state.buzzer_state = BUZZER_CONSTANT_ON;
     }
     // TODO:
     // 2: ALARM_SINGLE_FAN_FAILURE
@@ -123,22 +119,22 @@ void ALARM_SYSTEM_update(void) {
     // 4: checking if external 12V voltage is too high
     if (machine_state.sensor_data.vext > machine_state.threshold.VEXT_HIGH) {
         machine_state.error_code = ALARM_VEXT_HIGH;
-        buzzer_state = BUZZER_CONSTANT_ON;
+        machine_state.buzzer_state = BUZZER_CONSTANT_ON;
     }
     // 5: checking if external 12V voltage is too low
     if (machine_state.sensor_data.vext < machine_state.threshold.VEXT_LOW) {
         machine_state.error_code = ALARM_VEXT_LOW;
-        buzzer_state = BUZZER_CONSTANT_ON;
+        machine_state.buzzer_state = BUZZER_CONSTANT_ON;
     }
     // 6: checking if internal, regulated 5V voltage is too high
     if (machine_state.sensor_data.vint > machine_state.threshold.VINT_HIGH) {
         machine_state.error_code = ALARM_VINT_HIGH;
-        buzzer_state = BUZZER_CONSTANT_ON;
+        machine_state.buzzer_state = BUZZER_CONSTANT_ON;
     }
     // 7: checking if internal, regulated 5V voltage is too low
     if (machine_state.sensor_data.vext > machine_state.threshold.VINT_LOW) {
         machine_state.error_code = ALARM_VINT_LOW;
-        buzzer_state = BUZZER_CONSTANT_ON;
+        machine_state.buzzer_state = BUZZER_CONSTANT_ON;
     }
     // TODO:
     // ALARM_I2C_NOCONTACT
@@ -147,11 +143,11 @@ void ALARM_SYSTEM_update(void) {
     if (machine_state.sensor_data.button_builtin == 1) {
         // FIXME: we need some more logic here or the buzzer will instantly
         //        turn back on.
-        buzzer_state = BUZZER_SUMMED;
+        machine_state.buzzer_state = BUZZER_SUMMED;
     }
 
     // Write error code to the seven segment display
     //if (machine_state.error_code_has_changed)
-    //SEVEN_SEGMENT_showNumber(machine_state.error_code);
+    SEVEN_SEGMENT_showNumber(machine_state.error_code);
 }
 

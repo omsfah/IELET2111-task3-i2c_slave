@@ -3,15 +3,25 @@
  *
  * Data structure definitions that defines communication
  * internally on the AVR128DB48 and externally over I2C.
- * This file is also read by the ESP32 controller sketch.
  *
- * board: AVR128DB48 Curiosity Nano
+ * This file is also read by the ESP32 controller sketch, and
+ * unfortunately this required us to use a lot of compiler directives
+ * to enforce byte layout compatibility between C and C++. Both struct
+ * padding and C's implicit enum size played into this, and may also
+ * cause compatibility issues in the future with other compilers and
+ * changes to the data containers.
+ *
+ * board: AVR128DB48 Curiosity Nano, ESP32
  *
  */
 
 #ifndef DATASTRUCTURE_H_
 #define DATASTRUCTURE_H_
 
+#ifdef __cplusplus
+extern "C" {
+#pragma pack(1)
+#endif
 
 typedef enum {
     /* I2C commands reference.
@@ -24,6 +34,7 @@ typedef enum {
     NO_COMMAND = 0,
     REBOOT = 1,
     TEST_ALARM = 2,
+    USART_DEBUG_PRINT_ONCE = 3,
     SENDCONTAINER_MACHINE_STATE = 10,
     SENDCONTAINER_SENSOR_DATA = 11,
     SENDCONTAINER_THRESHOLDS = 12,
@@ -49,7 +60,7 @@ typedef enum {
 } I2C_COMMAND;
 
 
-typedef struct {
+typedef struct __attribute__((__packed__)) {
     /* Thresholds/maximum values for the systems
      * before alarm will go off */
 
@@ -64,18 +75,17 @@ typedef struct {
     uint16_t TEMP_HIGH;         // Temperature [celsius / 100]
     uint16_t FAN_OFFTIME;       // Time since fan stopped, [milliseconds]
     uint16_t I2C_LASTCOMTIME;   // Time since last communication with master, [milliseconds]
+    //uint16_t _padding;
 } alarm_threshold_t;
 
 
-typedef struct {
+typedef struct __attribute__((__packed__)) {
     /* Readings of sensors are represented here.
      *
      * Note: A change in datatype here must also be reflected in
      * 'I2C_parseCommand' in 'I2C.c'
      * */
     
-    uint8_t dip_switch;
-    bool button_builtin;
     uint16_t vext;
     uint16_t vint;
     uint16_t temp;
@@ -86,22 +96,28 @@ typedef struct {
     uint16_t fan2_span;
     uint16_t fan2_offtime;
     uint32_t uptime;
+    uint8_t dip_switch;
+    uint8_t button_builtin;
 } measurements_t;
 
 
-typedef struct {
+typedef struct __attribute__((__packed__)) {
     /* Data structure containing I2C data and status.
      * Since the I2C routine is writing to this through
      * interrupts, it must be instantiated as volatile. */
 
-    uint8_t address;
     uint32_t last_contact;
+    uint8_t address;
 } i2c_data_t;
 
 
-typedef enum {
+typedef enum 
+#ifdef __cplusplus
+: uint8_t
+#endif
+__attribute__((__packed__)) {
     /* System error codes */
-    OK = 0,
+    SYSTEM_OK = 0,  // (cannot be just 'OK' due to C redeclaration of enum problem)
     ALARM_TEMPERATURE = 1,
     ALARM_SINGLE_FAN_FAILURE = 2,
     ALARM_BOTH_FAN_FAILURE = 3,
@@ -118,17 +134,35 @@ typedef enum {
 } error_code_t;
 
 
-typedef struct {
+typedef enum 
+#ifdef __cplusplus
+: uint8_t
+#endif
+__attribute__((__packed__)) {
+    /* State machine for the alarm buzzer */
+    BUZZER_OFF = 0,
+    BUZZER_CONSTANT_ON = 1,
+    BUZZER_SUMMED = 2
+} buzzer_state_t;
+
+
+typedef struct __attribute__((__packed__)) {  
     /* Container data structure for the whole machine state */
 
     volatile i2c_data_t i2c_data;
     volatile alarm_threshold_t threshold;
     volatile measurements_t sensor_data;
-    bool error_code_has_changed;
+    uint8_t error_code_has_changed;
     uint8_t alarm_state;
+    buzzer_state_t buzzer_state;
     error_code_t error_code;
     uint8_t machine_state_size;
 } machine_state_t;
 
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DATASTRUCTURE_H_ */
