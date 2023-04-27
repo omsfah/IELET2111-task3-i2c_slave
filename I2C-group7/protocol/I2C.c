@@ -115,6 +115,18 @@ uint32_t U32_FROM_RECV(void) {
 }
 
 
+/* I2C transmission buffer overwrite/multiplex macro.
+ *  1. sets transmission_buffer to zero and, 2. overwrites it with the data 'x'
+ * 
+ * This macro is used internally by the 'I2C_parseCommand' function to reset
+ * and overwrite the transmission buffer during receive interrupts.
+ */
+#define I2C_TRANSBUF_MUX(x) {\
+    memset(transmission_buffer, 0, TRANSMISSION_BUFFER_SIZE); \
+    memcpy(transmission_buffer, &x, sizeof(x)); \
+}
+    
+
 void I2C_parseCommand(I2C_COMMAND command) {
     /* This function takes a command received from the
      * I2C controller and does either of:
@@ -147,50 +159,51 @@ void I2C_parseCommand(I2C_COMMAND command) {
 
         // Command series 10-19: Controller requests transmission of a data container
         case SENDCONTAINER_MACHINE_STATE:
-            memcpy(transmission_buffer, &machine_state, TRANSMISSION_BUFFER_SIZE);
+            I2C_TRANSBUF_MUX(machine_state);
         break;
         case SENDCONTAINER_SENSOR_DATA:
-            memcpy(transmission_buffer, &machine_state.sensor_data, sizeof(machine_state.sensor_data));
+            I2C_TRANSBUF_MUX(machine_state.sensor_data);
         break;
         case SENDCONTAINER_THRESHOLDS:
-            memcpy(transmission_buffer, &machine_state.threshold, sizeof(machine_state.threshold));
+            I2C_TRANSBUF_MUX(machine_state.threshold);
         break;
+
         // Command series 20-99: Controller requests transmission of a single value
         case SEND_VEXT:
-            memcpy(transmission_buffer, &machine_state.sensor_data.vext, sizeof(machine_state.sensor_data.vext));
+            I2C_TRANSBUF_MUX(machine_state.sensor_data.vext);
         break;
         case SEND_VINT:
-            memcpy(transmission_buffer, &machine_state.sensor_data.vint, sizeof(machine_state.sensor_data.vint));
+            I2C_TRANSBUF_MUX(machine_state.sensor_data.vint);
         break;
         case SEND_TEMP:
-            memcpy(transmission_buffer, &machine_state.sensor_data.temp, sizeof(machine_state.sensor_data.temp));
+            I2C_TRANSBUF_MUX(machine_state.sensor_data.temp);
         break;
         case SEND_FAN1_FREQ:
-            memcpy(transmission_buffer, &machine_state.sensor_data.fan1_freq, sizeof(machine_state.sensor_data.fan1_freq));
+            I2C_TRANSBUF_MUX(machine_state.sensor_data.fan1_freq);
         break;
         case SEND_FAN1_SPAN:
-            memcpy(transmission_buffer, &machine_state.sensor_data.fan1_span, sizeof(machine_state.sensor_data.fan1_span));
+            I2C_TRANSBUF_MUX(machine_state.sensor_data.fan1_span);
         break;
         case SEND_FAN1_OFFTIME:
-            memcpy(transmission_buffer, &machine_state.sensor_data.fan1_offtime, sizeof(machine_state.sensor_data.fan1_offtime));
+            I2C_TRANSBUF_MUX(machine_state.sensor_data.fan1_offtime);
         break;
         case SEND_FAN2_FREQ:
-            memcpy(transmission_buffer, &machine_state.sensor_data.fan2_freq, sizeof(machine_state.sensor_data.fan2_freq));
+            I2C_TRANSBUF_MUX(machine_state.sensor_data.fan2_freq);
         break;
         case SEND_FAN2_SPAN:
-            memcpy(transmission_buffer, &machine_state.sensor_data.fan2_span, sizeof(machine_state.sensor_data.fan2_span));
+            I2C_TRANSBUF_MUX(machine_state.sensor_data.fan2_span);
         break;
         case SEND_FAN2_OFFTIME:
-            memcpy(transmission_buffer, &machine_state.sensor_data.fan2_offtime, sizeof(machine_state.sensor_data.fan2_offtime));
+            I2C_TRANSBUF_MUX(machine_state.sensor_data.fan2_offtime);
         break;
         case SEND_UPTIME:
-            memcpy(transmission_buffer, &machine_state.sensor_data.uptime, sizeof(machine_state.sensor_data.uptime));
+            I2C_TRANSBUF_MUX(machine_state.sensor_data.uptime);
         break;
         case SEND_ALARM_STATE:
-            memcpy(transmission_buffer, &machine_state.alarm_state, sizeof(machine_state.alarm_state));
+            I2C_TRANSBUF_MUX(machine_state.alarm_state);
         break;
         case SEND_ERROR_CODE:
-            memcpy(transmission_buffer, &machine_state.error_code, sizeof(machine_state.error_code));
+            I2C_TRANSBUF_MUX(machine_state.error_code);
         break;
 
         // Command series 100-149: Controller demands a change of a threshold value
@@ -217,8 +230,7 @@ void I2C_parseCommand(I2C_COMMAND command) {
         break;
     }
 
-    memcpy(transmission_buffer, &machine_state, TRANSMISSION_BUFFER_SIZE);
-    printBothBuffers();
+    printBothBuffers(); // TODO: remove
 
     sei();  // Re-enable interrupts
 }
@@ -227,7 +239,7 @@ void I2C_parseCommand(I2C_COMMAND command) {
 void I2C_SYSTEM_update(void) {
     /* I2C housekeeping function exposed to 'main' */
 
-    //machine_state.i2c_data.last_contact = timer_sample();
+    //machine_state.i2c_data.last_contact = timer_sample(); // TODO: implement this
 
     // Update I2C address
     machine_state.i2c_data.address = machine_state.sensor_data.dip_switch + I2C_ADDRESS_OFFSET;
