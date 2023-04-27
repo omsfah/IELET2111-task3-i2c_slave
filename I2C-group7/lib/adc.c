@@ -1,8 +1,7 @@
 #include "adc.h"
 
-uint16_t adcVal = 0;
-
-void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode) {
+void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode)
+{
 	/*What the cases does 
 	case n:
 	Disable digital input buffer;
@@ -10,10 +9,10 @@ void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode) {
 	Disable pull-up resistor;
 	break;
 	
-	
 	uses memory positions for easier parametric manipulation
 	*/
-	switch(port) {
+	switch(port)
+	{
 		case PORT_D:
 			_SFR_MEM8(0x0470+pin) &= ~PORT_ISC_gm;
 			_SFR_MEM8(0x0470+pin) |= PORT_ISC_INPUT_DISABLE_gc;
@@ -35,7 +34,8 @@ void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode) {
 	ADC0.CTRLA = ADC_ENABLE_bm | ADC_RESSEL_10BIT_gc;
 	VREF.ADC0REF = VREF_REFSEL_VDD_gc;
 	
-	switch (adc_mode) {
+	switch (adc_mode)
+	{
 		case SINGLE_CONVERSION_MODE:
 			break;
 		case FREERUN_MODE:
@@ -44,7 +44,8 @@ void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode) {
 	}
 }
 
-uint16_t ADC0_readSingle(PORT_SELECT port, uint8_t pin){
+uint16_t ADC0_readSingle(PORT_SELECT port, uint8_t pin)
+{
 	ADC0.MUXPOS = ((port * 8 + pin)<<0);
 	ADC0.COMMAND = ADC_STCONV_bm;
 	
@@ -56,4 +57,9 @@ uint16_t ADC0_readSingle(PORT_SELECT port, uint8_t pin){
 	ADC0.INTFLAGS = ADC_RESRDY_bm;
 	
 	return ADC0.RES;
+}
+
+double ADC0_readVoltage(PORT_SELECT port, uint8_t pin)
+{
+	return ADC0_readSingle(port, pin)*(3.3/1024.0);
 }

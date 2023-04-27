@@ -12,9 +12,11 @@
 #include "lib/adc.h"
 #include "lib/builtins.h"
 #include "lib/usart.h"
+#include "lib/thermistor.h"
 
 #include "hardware/init.h"
 #include "hardware/read.h"
+#include "hardware/voltages.h"
 
 
 #include "protocol/I2C.h"
@@ -25,7 +27,7 @@ int main(void) {
     USART3_init();
     BUTTON_BUILTIN_init();
     LED_BUILTIN_init();
-	ADC0_init(PORT_D, 0, SINGLE_CONVERSION_MODE);
+	ADC0_init(PORT_E, 0, SINGLE_CONVERSION_MODE);
 	
 
     stdout = &USART3_stream;    // Move to usart.h if possible
@@ -56,8 +58,11 @@ int main(void) {
         // If master polls for information, send the register
 
 		
-		uint16_t val = ADC0_readSingle(PORT_E, 0);
-        printf("ADC verdi= %d \r\n",val);
+		
+		
+        //printf("ADC verdi= %d \r\n",ADC0_readSingle(PORT_D, 6));
+		//printf("temp verdi= %f \r\n",ntc_conversion(ADC0_readVoltage(PORT_D, 6)));
+		//printf("scalingtest %f",scaleVoltage(ADC0_readVoltage(PORT_D, 6), 5500, 33000));
         LED_BUILTIN_toggle();
         _delay_ms(100);
     }
