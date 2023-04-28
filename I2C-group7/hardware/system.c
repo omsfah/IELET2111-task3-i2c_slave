@@ -64,7 +64,7 @@ void MACHINE_STATE_update(void) {
     machine_state.sensor_data.vint = ADC0_readSingle(PORT_E, 1);
 
     // Check Temperature
-    machine_state.sensor_data.temp = ADC0_readSingle(PORT_E, 2);
+    machine_state.sensor_data.temp = THERMISTOR_read();
 
     // Check Fan RPM
     machine_state.sensor_data.fan1_freq = FAN_MONITOR_1_readFrequency();

@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "../lib/adc.h"
+
 long double ntc_conversion(double voltVal);
+uint16_t THERMISTOR_read(void);
 
 #endif /* THERMISTOR_H_ */
