@@ -15,9 +15,9 @@ void SYSTEMS_init(void) {
     stdout = &USART3_stream;    // Move to usart.h if possible
 
     // Generic ADC initializations
-    ADC0_init(PORT_E, 0, SINGLE_CONVERSION_MODE);   // VEXT (External 12V supply)
-    ADC0_init(PORT_E, 1, SINGLE_CONVERSION_MODE);   // VINT (Internal 5V supply)
-    ADC0_init(PORT_E, 2, SINGLE_CONVERSION_MODE);   // TEMP (TMP36)
+    ADC0_init(PORT_D, 2, SINGLE_CONVERSION_MODE);   // VINT (Internal 5V supply)
+    ADC0_init(PORT_D, 3, SINGLE_CONVERSION_MODE);   // VEXT (External 12V supply)
+    ADC0_init(PORT_F, 4, SINGLE_CONVERSION_MODE);   // TEMP (thermistor)
 
     // Init brownout detection
     // Init watchdog
@@ -59,9 +59,9 @@ void MACHINE_STATE_update(void) {
 
     //memset(machine_state
 
-    // Check external voltage
-    machine_state.sensor_data.vext = ADC0_readSingle(PORT_E, 0);
-    machine_state.sensor_data.vint = ADC0_readSingle(PORT_E, 1);
+    // Check voltages
+    machine_state.sensor_data.vext = VEXT_read();
+    machine_state.sensor_data.vint = VINT_read();
 
     // Check Temperature
     machine_state.sensor_data.temp = THERMISTOR_read();
