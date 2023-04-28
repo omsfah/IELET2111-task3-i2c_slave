@@ -73,8 +73,8 @@ typedef struct __attribute__((__packed__)) {
     uint16_t VINT_LOW;
 
     uint16_t TEMP_HIGH;         // Temperature [celsius / 100]
-    uint16_t FAN_OFFTIME;       // Time since fan stopped, [milliseconds]
-    uint16_t I2C_LASTCOMTIME;   // Time since last communication with master, [milliseconds]
+    uint16_t FAN_OFFTIME;       // Time since fan stopped, [seconds]
+    uint16_t I2C_LASTCOMTIME;   // Time since last communication with master, [seconds]
     //uint16_t _padding;
 } alarm_threshold_t;
 

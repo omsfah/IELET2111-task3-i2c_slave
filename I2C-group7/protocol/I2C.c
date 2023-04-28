@@ -13,6 +13,8 @@ volatile uint8_t receive_buffer_index = 0;
 volatile uint8_t transmission_buffer[TRANSMISSION_BUFFER_SIZE];
 volatile uint8_t receive_buffer[RECEIVE_BUFFER_SIZE];
 
+volatile uint32_t last_i2c_contact_time = 0;
+
 
 twi_receive_callback_t onReceive(uint8_t data) {
     /* Routine for every time we receive a byte on the I2C bus */
@@ -59,6 +61,7 @@ twi_stop_callback_t onStop(void) {
     transmission_buffer_index = 0;
 
     //memset(&receive_buffer, 0, RECEIVE_BUFFER_SIZE);
+    last_i2c_contact_time = RTC_UPTIME_COUNTER_read();
 }
 
 
@@ -244,7 +247,7 @@ void I2C_parseCommand(I2C_COMMAND command) {
 void I2C_SYSTEM_update(void) {
     /* I2C housekeeping function exposed to 'main' */
 
-    //machine_state.i2c_data.last_contact = timer_sample(); // TODO: implement this
+    machine_state.i2c_data.last_contact = RTC_UPTIME_COUNTER_read() - last_i2c_contact_time;
 
     // Update I2C address
     machine_state.i2c_data.address = machine_state.sensor_data.dip_switch + I2C_ADDRESS_OFFSET;

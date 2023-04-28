@@ -35,33 +35,33 @@ void printMachineState(void) {
     /* Print the contents of 'machine_state', using native datatypes */
 
     Serial.printf("[I2C_DATA]:\n");
-    Serial.printf("address: \t%d\n", machine_state.i2c_data.address);
-    Serial.printf("last_contact: \t%d\n", machine_state.i2c_data.last_contact);
+    Serial.printf("address: \t%u\n", machine_state.i2c_data.address);
+    Serial.printf("last_contact: \t%u\t[s]\n", machine_state.i2c_data.last_contact);
     Serial.println();
 
     Serial.printf("[ALARM_THRESHOLD]\n");
-    Serial.printf("VEXT_HIGH: \t%u\n", machine_state.threshold.VEXT_HIGH);
-    Serial.printf("VEXT_LOW: \t%u\n", machine_state.threshold.VEXT_LOW);
-    Serial.printf("VINT_HIGH: \t%u\n", machine_state.threshold.VINT_HIGH);
-    Serial.printf("VINT_LOW: \t%u\n", machine_state.threshold.VINT_LOW);
-    Serial.printf("TEMP_HIGH: \t%u\n", machine_state.threshold.TEMP_HIGH);
-    Serial.printf("FAN_OFFTIME: \t%u\n", machine_state.threshold.FAN_OFFTIME);
-    Serial.printf("I2C_LASTCOMTIME: %u\n", machine_state.threshold.I2C_LASTCOMTIME);
+    Serial.printf("VEXT_HIGH: \t%u\t[mV]\n", machine_state.threshold.VEXT_HIGH);
+    Serial.printf("VEXT_LOW: \t%u\t[mV]\n", machine_state.threshold.VEXT_LOW);
+    Serial.printf("VINT_HIGH: \t%u\t[mV]\n", machine_state.threshold.VINT_HIGH);
+    Serial.printf("VINT_LOW: \t%u\t[mV]\n", machine_state.threshold.VINT_LOW);
+    Serial.printf("TEMP_HIGH: \t%u\t[C/100]\n", machine_state.threshold.TEMP_HIGH);
+    Serial.printf("FAN_OFFTIME: \t%u\t[s]\n", machine_state.threshold.FAN_OFFTIME);
+    Serial.printf("I2C_LASTCOMTIME: %u\t[s]\n", machine_state.threshold.I2C_LASTCOMTIME);
     Serial.println();
 
     Serial.printf("[SENSOR_DATA]\n");
     Serial.printf("dip_switch: \t%u\n", machine_state.sensor_data.dip_switch);
     Serial.printf("button_builtin: %u\n", machine_state.sensor_data.button_builtin);
-    Serial.printf("vext: \t\t%u\n", machine_state.sensor_data.vext);
-    Serial.printf("vint: \t\t%u\n", machine_state.sensor_data.vint);
-    Serial.printf("temp: \t\t%u\n", machine_state.sensor_data.temp);
-    Serial.printf("fan1_freq: \t%u\n", machine_state.sensor_data.fan1_freq);
-    Serial.printf("fan1_span: \t%u\n", machine_state.sensor_data.fan1_span);
-    Serial.printf("fan1_offtime: \t%u\n", machine_state.sensor_data.fan1_offtime);
-    Serial.printf("fan2_freq: \t%u\n", machine_state.sensor_data.fan2_freq);
-    Serial.printf("fan2_span: \t%u\n", machine_state.sensor_data.fan2_span);
-    Serial.printf("fan2_offtime: \t%u\n", machine_state.sensor_data.fan2_offtime);
-    Serial.printf("uptime: \t%u\n", machine_state.sensor_data.uptime);
+    Serial.printf("vext: \t\t%u\t[mV]\n", machine_state.sensor_data.vext);
+    Serial.printf("vint: \t\t%u\t[mV]\n", machine_state.sensor_data.vint);
+    Serial.printf("temp: \t\t%u\t[C/100]\n", machine_state.sensor_data.temp);
+    Serial.printf("fan1_freq: \t%u\t[Hz]\n", machine_state.sensor_data.fan1_freq);
+    Serial.printf("fan1_span: \t%u\t[Hz]\n", machine_state.sensor_data.fan1_span);
+    Serial.printf("fan1_offtime: \t%u\t[s]\n", machine_state.sensor_data.fan1_offtime);
+    Serial.printf("fan2_freq: \t%u\t[Hz]\n", machine_state.sensor_data.fan2_freq);
+    Serial.printf("fan2_span: \t%u\t[Hz]\n", machine_state.sensor_data.fan2_span);
+    Serial.printf("fan2_offtime: \t%u\t[s]\n", machine_state.sensor_data.fan2_offtime);
+    Serial.printf("uptime: \t%u\t[s]\n", machine_state.sensor_data.uptime);
     Serial.println();
 
     Serial.printf("[MISC.]\n");
@@ -138,12 +138,21 @@ namespace test {
     }
 
     void readTemperature(void) {
-        Serial.println("[Running test]: ");
+        Serial.println("[Running test]: readTemperature");
 
         for (auto i = 0; i<3; i++) {
             sendCommand(22, 0);
             requestBytes(2);
         }
+    }
+    
+    void readFreq(void) {
+        Serial.println("[Running test]: readFreq");
+
+        sendCommand(30, 0);
+        requestMachineState();
+        Serial.printf("fan1_freq: \t%u\n", machine_state.sensor_data.fan1_freq);
+
     }
 
     void transmissionBufferMultiplexing(void) {
@@ -170,6 +179,7 @@ namespace test {
         Serial.println("[Running test]: setAllThresholds");
 
         for (auto i = 0; i < 1; i++) {
+            sendCommand(0, 0);
             sendCommand(100, val);
             sendCommand(101, val);
             sendCommand(102, val);
@@ -177,6 +187,22 @@ namespace test {
             sendCommand(104, val);
             sendCommand(105, val);
             sendCommand(106, val);
+        }
+    }
+
+    void setSaneDefaultThresholds(void) {
+        /* Command a change of all thresholds to sane default values */
+        Serial.println("[Running test]: setSaneDefaultThresholds");
+
+        for (auto i = 0; i < 1; i++) {
+            sendCommand(0, 0);
+            sendCommand(100, 12800);    // VEXT 12.8 [V] max
+            sendCommand(101, 10500);    // VEXT 10.5 [V] min
+            sendCommand(102, 5500);     // VINT 5.5 [V] max
+            sendCommand(103, 4300);     // VINT 4.3 [V] min
+            sendCommand(104, 9000);     // TEMP 90 [C] max
+            sendCommand(105, 1);        // fan off for 1 [s]
+            sendCommand(106, 10);       // last i2c communication, 10 [s] ago
         }
     }
 
@@ -200,15 +226,20 @@ void loop(void) {
     //test::transmissionBufferMultiplexing();
 
     delay(1000);
+    /*
+    test::readFreq();
+    test::cmdUsartDebugPrintOnce();
+    */
     test::setAllThresholds(0xffffffff);
     test::readWholeMachineState();
     printBuffer(PACKET_SIZE);
     test::cmdUsartDebugPrintOnce();
     delay(1000);
-    test::setAllThresholds(0);
+    test::setSaneDefaultThresholds();
     test::readWholeMachineState();
     printBuffer(PACKET_SIZE);
     test::cmdUsartDebugPrintOnce();
+
 
     n++;
 }
