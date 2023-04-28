@@ -10,6 +10,7 @@ void SYSTEMS_init(void) {
     DIP4_init();
     SEVEN_SEGMENT_init();
     FAN_MONITOR_init();
+    RTC_UPTIME_COUNTER_init();
 
     USART3_init();
     stdout = &USART3_stream;    // Move to usart.h if possible
@@ -50,8 +51,8 @@ void development_testing(void) {
 
     //SEVEN_SEGMENT_showNumber(machine_state.sensor_data.dip_switch);
 
-    LED_BUILTIN_toggle();
-    _delay_ms(500);
+    //LED_BUILTIN_toggle();
+    //_delay_ms(500);
 }
 
 void MACHINE_STATE_update(void) {
@@ -73,6 +74,9 @@ void MACHINE_STATE_update(void) {
     machine_state.sensor_data.fan2_span = FAN_MONITOR_2_readSpan();
 
     // Check I2C (save something about I2C status?)
+
+    // Sample RTC for uptime
+    machine_state.sensor_data.uptime = RTC_UPTIME_COUNTER_read();
 
     // Read DIP-switch
     machine_state.sensor_data.dip_switch = DIP4_read();

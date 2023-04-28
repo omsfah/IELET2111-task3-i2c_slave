@@ -24,7 +24,7 @@
 #include "../lib/usart.h"
 #include "../lib/adc.h"
 #include "../lib/builtins.h"
-
+#include "../lib/rtc.h"
 
 #include "../protocol/I2C.h"
 #include "../protocol/logging.h"
