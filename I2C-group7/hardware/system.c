@@ -25,13 +25,14 @@ void SYSTEMS_init(void) {
 }
 
 void MACHINE_STATE_init(void) {
-    // Init systems for saving machine state
-    //   data structure
-    //   EEPROM
-    //   Reset controller?
-    machine_state.machine_state_size = sizeof(machine_state);
+    /* This function is ran once on startup to initialize values
+     * of the global 'machine_state' data structure. */
 
-    machine_state.error_code_has_changed = false;
+    // Restore threshold values that have been stored to EEPROM
+    eepromRead(THRESHOLDS_EEPROM_ADDR, &machine_state.threshold, sizeof(machine_state.threshold));
+
+    // Sample the size of 'machine_state'
+    machine_state.machine_state_size = sizeof(machine_state);
 }
 
 void development_testing(void) {
@@ -57,8 +58,6 @@ void development_testing(void) {
 
 void MACHINE_STATE_update(void) {
     /* Update 'machine_state' with new readings */
-
-    //memset(machine_state
 
     // Check voltages
     machine_state.sensor_data.vext = VEXT_read();

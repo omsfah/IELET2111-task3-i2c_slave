@@ -174,6 +174,10 @@ void I2C_parseCommand(I2C_COMMAND command) {
             RSTCTRL.RSTFR = RSTCTRL_PORF_bm | RSTCTRL_BORF_bm | RSTCTRL_EXTRF_bm
                           | RSTCTRL_SWRF_bm | RSTCTRL_UPDIRF_bm;
         break;
+        
+        case SAVE_THRESHOLDS:
+            eepromWrite(THRESHOLDS_EEPROM_ADDR, &machine_state.threshold, sizeof(machine_state.threshold));
+        break;
 
         // Command series 10-19: Controller requests transmission of a data container
         case SENDCONTAINER_MACHINE_STATE:
