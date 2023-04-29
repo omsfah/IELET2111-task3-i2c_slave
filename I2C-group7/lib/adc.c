@@ -1,7 +1,5 @@
 #include "adc.h"
 
-uint16_t adcVal = 0;
-
 void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode) {
 	/*What the cases does 
 	case n:
@@ -9,7 +7,6 @@ void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode) {
 	Disable digital input buffer;
 	Disable pull-up resistor;
 	break;
-	
 	
 	uses memory positions for easier parametric manipulation
 	*/
@@ -31,9 +28,9 @@ void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode) {
 			break;
 	}
 	
-	ADC0.CTRLC = ADC_PRESC_DIV4_gc;
-	ADC0.CTRLA = ADC_ENABLE_bm | ADC_RESSEL_10BIT_gc;
-	VREF.ADC0REF = VREF_REFSEL_VDD_gc;
+	ADC0.CTRLC = ADC_PRESC_DIV4_gc; //Set ADC Clock to 1MHZ
+	ADC0.CTRLA = ADC_ENABLE_bm | ADC_RESSEL_10BIT_gc; //Enable ADC and set it to 10-bit mode
+	VREF.ADC0REF = VREF_REFSEL_VDD_gc; //Set Vref on AC to VDD (3.3V)
 	
 	switch (adc_mode) {
 		case SINGLE_CONVERSION_MODE:
@@ -45,11 +42,10 @@ void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode) {
 }
 
 uint16_t ADC0_readSingle(PORT_SELECT port, uint8_t pin){
-	ADC0.MUXPOS = ((port * 8 + pin)<<0);
-	ADC0.COMMAND = ADC_STCONV_bm;
+	ADC0.MUXPOS = ((port * 8 + pin)<<0); //Select input pin
+	ADC0.COMMAND = ADC_STCONV_bm; //Start conversion as soon as ADC is available
 	
-	while (!(ADC0.INTFLAGS & ADC_RESRDY_bm))
-	{
+	while (!(ADC0.INTFLAGS & ADC_RESRDY_bm)){
 		;
 	}
 	
@@ -57,7 +53,6 @@ uint16_t ADC0_readSingle(PORT_SELECT port, uint8_t pin){
 	
 	return ADC0.RES;
 }
-double ADC0_readVoltage(PORT_SELECT port, uint8_t pin)
-{
+double ADC0_readVoltage(PORT_SELECT port, uint8_t pin){
 	return ADC0_readSingle(port, pin)*(3.3/1024.0);
 }
