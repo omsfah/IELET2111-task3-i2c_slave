@@ -170,13 +170,17 @@ void I2C_parseCommand(I2C_COMMAND command) {
 
         case SUM_ALARM:
             machine_state.buzzer_state = BUZZER_SUMMED;
-            // We also reset the reset flag register
+            // We also clear the reset flag register
             RSTCTRL.RSTFR = RSTCTRL_PORF_bm | RSTCTRL_BORF_bm | RSTCTRL_EXTRF_bm
                           | RSTCTRL_SWRF_bm | RSTCTRL_UPDIRF_bm;
         break;
         
-        case SAVE_THRESHOLDS:
+        case SAVE_THRESHOLDS_TO_EEPROM:
             eepromWrite(THRESHOLDS_EEPROM_ADDR, &machine_state.threshold, sizeof(machine_state.threshold));
+        break;
+
+        case LOAD_THRESHOLDS_FROM_EEPROM:
+            eepromRead(THRESHOLDS_EEPROM_ADDR, &machine_state.threshold, sizeof(machine_state.threshold));
         break;
 
         case FACTORY_RESET:
