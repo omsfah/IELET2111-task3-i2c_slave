@@ -32,9 +32,11 @@ typedef enum {
      *  series 100-149: Threshold settings
      */
     NO_COMMAND = 0,
-    REBOOT = 1,
-    TEST_ALARM = 2,
+    SOFTWARE_RESET = 1,
+    unused2 = 2,
     USART_DEBUG_PRINT_ONCE = 3,
+    TEST_ALARM = 4,
+    SUM_ALARM = 5,
     SENDCONTAINER_MACHINE_STATE = 10,
     SENDCONTAINER_SENSOR_DATA = 11,
     SENDCONTAINER_THRESHOLDS = 12,
@@ -48,7 +50,7 @@ typedef enum {
     SEND_FAN2_SPAN = 41,
     SEND_FAN2_OFFTIME = 42,
     SEND_UPTIME = 50,
-    SEND_ALARM_STATE = 51,
+    SEND_RESET_FLAG_REGISTER = 51,
     SEND_ERROR_CODE = 52,
     SET_THRESHOLD_VEXT_HIGH = 100,
     SET_THRESHOLD_VEXT_LOW = 101,
@@ -153,7 +155,7 @@ typedef struct __attribute__((__packed__)) {
     volatile alarm_threshold_t threshold;
     volatile measurements_t sensor_data;
     uint8_t error_code_has_changed;
-    uint8_t alarm_state;
+    uint8_t reset_flag_register;
     buzzer_state_t buzzer_state;
     error_code_t error_code;
     uint8_t machine_state_size;

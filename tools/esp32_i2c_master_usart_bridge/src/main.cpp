@@ -19,7 +19,6 @@ static const uint8_t TARGET_I2C_ADDRESS = 104;
 static const uint8_t PACKET_SIZE = sizeof(machine_state);
 
 uint8_t data_buffer[PACKET_SIZE] = {0};
-uint8_t n = 0;
 
 
 void printBuffer(uint8_t bytes) {
@@ -66,7 +65,7 @@ void printMachineState(void) {
 
     Serial.printf("[MISC.]\n");
     Serial.printf("error_code_has_changed: %u\n", machine_state.error_code_has_changed);
-    Serial.printf("alarm_state: \t%u\n", machine_state.alarm_state);
+    Serial.printf("reset_flag_register: \t0x%02X\n", machine_state.reset_flag_register);
     Serial.printf("buzzer_state: \t%u\n", machine_state.buzzer_state);
     Serial.printf("error_code: \t%u\n", machine_state.error_code);
     Serial.printf("machine_state_size: %u\n", machine_state.machine_state_size);
@@ -135,6 +134,8 @@ namespace test {
         sendCommand(10, 0); // Command 'machine_state' to be sent
         requestMachineState();
         printMachineState();
+        printBuffer(PACKET_SIZE);
+        memset(&data_buffer, 0, PACKET_SIZE);
     }
 
     void readTemperature(void) {
@@ -207,7 +208,11 @@ namespace test {
     }
 
     void cmdUsartDebugPrintOnce(void) {
-        sendCommand(3, n);
+        sendCommand(3, 0);
+    }
+
+    void cmdSumAlarms(void) {
+        sendCommand(5, 0);
     }
 }
 
@@ -224,6 +229,7 @@ void loop(void) {
 
     //test::readTemperature();
     //test::transmissionBufferMultiplexing();
+    //test::cmdSumAlarms();
 
     delay(1000);
     /*
@@ -232,15 +238,11 @@ void loop(void) {
     */
     test::setAllThresholds(0xffffffff);
     test::readWholeMachineState();
-    printBuffer(PACKET_SIZE);
     test::cmdUsartDebugPrintOnce();
     delay(1000);
+
     test::setSaneDefaultThresholds();
     test::readWholeMachineState();
-    printBuffer(PACKET_SIZE);
     test::cmdUsartDebugPrintOnce();
-
-
-    n++;
 }
 

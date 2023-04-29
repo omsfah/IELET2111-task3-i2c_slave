@@ -156,15 +156,23 @@ void I2C_parseCommand(I2C_COMMAND command) {
             // Do nothing
         break;
 
-        case REBOOT:
-            // TODO: not implemented
+        case SOFTWARE_RESET:
+            RSTCTRL.SWRR = RSTCTRL_SWRST_bm;
+        break;
+
+        case USART_DEBUG_PRINT_ONCE:
+            printBothBuffers();
         break;
 
         case TEST_ALARM:
-            // TODO: not implemented
+            machine_state.buzzer_state = BUZZER_CONSTANT_ON;
         break;
-        case USART_DEBUG_PRINT_ONCE:
-            printBothBuffers();
+
+        case SUM_ALARM:
+            machine_state.buzzer_state = BUZZER_SUMMED;
+            // We also reset the reset flag register
+            RSTCTRL.RSTFR = RSTCTRL_PORF_bm | RSTCTRL_BORF_bm | RSTCTRL_EXTRF_bm
+                          | RSTCTRL_SWRF_bm | RSTCTRL_UPDIRF_bm;
         break;
 
         // Command series 10-19: Controller requests transmission of a data container
@@ -209,8 +217,8 @@ void I2C_parseCommand(I2C_COMMAND command) {
         case SEND_UPTIME:
             I2C_TRANSBUF_MUX(machine_state.sensor_data.uptime);
         break;
-        case SEND_ALARM_STATE:
-            I2C_TRANSBUF_MUX(machine_state.alarm_state);
+        case SEND_RESET_FLAG_REGISTER:
+            I2C_TRANSBUF_MUX(machine_state.reset_flag_register);
         break;
         case SEND_ERROR_CODE:
             I2C_TRANSBUF_MUX(machine_state.error_code);

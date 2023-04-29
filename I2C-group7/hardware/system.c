@@ -73,15 +73,15 @@ void MACHINE_STATE_update(void) {
     machine_state.sensor_data.fan1_span = FAN_MONITOR_1_readSpan();
     machine_state.sensor_data.fan2_span = FAN_MONITOR_2_readSpan();
 
-    // Check I2C (save something about I2C status?)
-
     // Sample RTC for uptime
     machine_state.sensor_data.uptime = RTC_UPTIME_COUNTER_read();
 
     // Read DIP-switch
     machine_state.sensor_data.dip_switch = DIP4_read();
     machine_state.machine_state_size = sizeof(machine_state);
-    //printf("\n size: %d \n", machine_state.machine_state_size);
+
+    // Sample the reset flag register
+    machine_state.reset_flag_register = RSTCTRL.RSTFR;
 
     development_testing();
 }
@@ -148,6 +148,10 @@ void ALARM_SYSTEM_update(void) {
         // FIXME: we need some more logic here or the buzzer will instantly
         //        turn back on.
         machine_state.buzzer_state = BUZZER_SUMMED;
+
+        // We also reset the reset flag register when the button is pressed
+        RSTCTRL.RSTFR = RSTCTRL_PORF_bm | RSTCTRL_BORF_bm | RSTCTRL_EXTRF_bm
+                                        | RSTCTRL_SWRF_bm | RSTCTRL_UPDIRF_bm;
     }
 
     // Write error code to the seven segment display
