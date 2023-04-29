@@ -21,3 +21,12 @@
 // Debug printing config
 //#define ENABLE_DEBUG_PRINT_TO_USART3
 
+
+// Factory settings for the alarm thresholds
+#define FACTORY_VEXT_HIGH       12800
+#define FACTORY_VEXT_LOW        10500
+#define FACTORY_VINT_HIGH       5500
+#define FACTORY_VINT_LOW        4300
+#define FACTORY_TEMP_HIGH       9000
+#define FACTORY_FAN_OFFTIME     1
+#define FACTORY_I2C_LASTCOMTIME 10

@@ -179,6 +179,16 @@ void I2C_parseCommand(I2C_COMMAND command) {
             eepromWrite(THRESHOLDS_EEPROM_ADDR, &machine_state.threshold, sizeof(machine_state.threshold));
         break;
 
+        case FACTORY_RESET:
+            machine_state.threshold.VEXT_HIGH = FACTORY_VEXT_HIGH;
+            machine_state.threshold.VEXT_LOW = FACTORY_VEXT_LOW;
+            machine_state.threshold.VINT_HIGH = FACTORY_VINT_HIGH;
+            machine_state.threshold.VINT_LOW = FACTORY_VINT_LOW;
+            machine_state.threshold.TEMP_HIGH = FACTORY_TEMP_HIGH;
+            machine_state.threshold.FAN_OFFTIME = FACTORY_FAN_OFFTIME;
+            machine_state.threshold.I2C_LASTCOMTIME = FACTORY_I2C_LASTCOMTIME;
+        break;
+
         // Command series 10-19: Controller requests transmission of a data container
         case SENDCONTAINER_MACHINE_STATE:
             I2C_TRANSBUF_MUX(machine_state);
