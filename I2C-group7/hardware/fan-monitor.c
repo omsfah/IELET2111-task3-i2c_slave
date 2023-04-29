@@ -13,10 +13,16 @@ volatile uint8_t fan2_buffer_index = 0;
 
 
 ISR(AC0_AC_vect) {
+    /* ISR for AC0.
+     * Interrupt is handled by TCB0, but we need to set the flag
+     * high or the program hangs*/
     AC0.STATUS = AC_CMPIF_bm;
 }
 
 ISR(AC1_AC_vect) {
+    /* ISR for AC1.
+     * Interrupt is handled by TCB1, but we need to set the flag
+     * high or the program hangs*/
     AC1.STATUS = AC_CMPIF_bm;
 }
 
@@ -70,13 +76,13 @@ void FAN_MONITOR_init(void) {
     AC0.DACREF = 0;
     AC0.INTCTRL = AC_INTMODE_NORMAL_POSEDGE_gc | AC_CMP_bm;
     AC0.MUXCTRL = AC_MUXPOS_AINP1_gc | AC_MUXNEG_DACREF_gc;
-    AC0.CTRLA = AC_ENABLE_bm;   // hystmode?
+    AC0.CTRLA = AC_ENABLE_bm | AC_HYSMODE_LARGE_gc;
 
     // Initialize analog comparator AC1
     AC1.DACREF = 0;
     AC1.INTCTRL = AC_INTMODE_NORMAL_POSEDGE_gc | AC_CMP_bm;
     AC1.MUXCTRL = AC_MUXPOS_AINP1_gc | AC_MUXNEG_DACREF_gc;
-    AC1.CTRLA = AC_ENABLE_bm;   // hystmode?
+    AC1.CTRLA = AC_ENABLE_bm | AC_HYSMODE_LARGE_gc;
 
     // Set up the TCB0 timer for FAN 1
     TCB0.CTRLB = TCB_CNTMODE_FRQ_gc;    // Input capture freqency
@@ -109,11 +115,13 @@ uint16_t FAN_MONITOR_2_readSpan(void) {
 
 
 uint16_t FAN_MONITOR_1_readFrequency(void) {
-    return mean(fan1_freq, FAN_MEAS_BUFFER_SIZE);
+    uint16_t temp = mean(fan1_freq, FAN_MEAS_BUFFER_SIZE);
+    return temp;
 }
 
 
 uint16_t FAN_MONITOR_2_readFrequency(void) {
-    return mean(fan2_freq, FAN_MEAS_BUFFER_SIZE);
+    uint16_t temp = mean(fan2_freq, FAN_MEAS_BUFFER_SIZE);
+    return temp;
 }
 

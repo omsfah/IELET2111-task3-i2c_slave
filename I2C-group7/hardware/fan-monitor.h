@@ -24,9 +24,9 @@
 #define FAN_MEAS_BUFFER_SIZE 16
 
 void FAN_MONITOR_init(void);
-uint16_t FAN_MONITOR_1_readFrequency(void);
-uint16_t FAN_MONITOR_2_readFrequency(void);
 uint16_t FAN_MONITOR_1_readSpan(void);
 uint16_t FAN_MONITOR_2_readSpan(void);
+uint16_t FAN_MONITOR_1_readFrequency(void);
+uint16_t FAN_MONITOR_2_readFrequency(void);
 
 #endif
