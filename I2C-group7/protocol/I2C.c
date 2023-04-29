@@ -151,7 +151,7 @@ void I2C_parseCommand(I2C_COMMAND command) {
     cli();  // Disable interrupts while we parse the command
 
     switch (command) {
-        // Command series 0-9: Direct control of target
+        // Command series 0-99: Direct control of target
         case NO_COMMAND:
             // Do nothing
         break;
@@ -193,7 +193,7 @@ void I2C_parseCommand(I2C_COMMAND command) {
             machine_state.threshold.I2C_LASTCOMTIME = FACTORY_I2C_LASTCOMTIME;
         break;
 
-        // Command series 10-19: Controller requests transmission of a data container
+        // Command series 100-119: Controller requests transmission of a data container
         case SENDCONTAINER_MACHINE_STATE:
             I2C_TRANSBUF_MUX(machine_state);
         break;
@@ -204,7 +204,7 @@ void I2C_parseCommand(I2C_COMMAND command) {
             I2C_TRANSBUF_MUX(machine_state.threshold);
         break;
 
-        // Command series 20-99: Controller requests transmission of a single value
+        // Command series 120-199: Controller requests transmission of a single value
         case SEND_VEXT:
             I2C_TRANSBUF_MUX(machine_state.sensor_data.vext);
         break;
@@ -242,7 +242,7 @@ void I2C_parseCommand(I2C_COMMAND command) {
             I2C_TRANSBUF_MUX(machine_state.error_code);
         break;
 
-        // Command series 100-149: Controller demands a change of a threshold value
+        // Command series 200-255: Controller demands a change of a threshold value
         case SET_THRESHOLD_VEXT_HIGH:
             machine_state.threshold.VEXT_HIGH = U16_FROM_RECV();
         break;

@@ -26,10 +26,10 @@ extern "C" {
 typedef enum {
     /* I2C commands reference.
      *
-     *  series 0-9: Direct commands
-     *  series 10-19: Bulk transmission
-     *  series 20-99: Single value transmission
-     *  series 100-149: Threshold settings
+     *  series 0-99: Direct commands
+     *  series 100-119: Bulk transmission
+     *  series 120-199: Single value transmission
+     *  series 200-255: Threshold settings
      */
     NO_COMMAND = 0,
     SOFTWARE_RESET = 1,
@@ -40,28 +40,28 @@ typedef enum {
     SAVE_THRESHOLDS_TO_EEPROM = 7,
     LOAD_THRESHOLDS_FROM_EEPROM = 8,
     FACTORY_RESET = 9,
-    SENDCONTAINER_MACHINE_STATE = 10,
-    SENDCONTAINER_SENSOR_DATA = 11,
-    SENDCONTAINER_THRESHOLDS = 12,
-    SEND_VEXT = 20,
-    SEND_VINT = 21,
-    SEND_TEMP = 22,
-    SEND_FAN1_FREQ = 30,
-    SEND_FAN1_SPAN = 31,
-    SEND_FAN1_OFFTIME = 32,
-    SEND_FAN2_FREQ = 40,
-    SEND_FAN2_SPAN = 41,
-    SEND_FAN2_OFFTIME = 42,
-    SEND_UPTIME = 50,
-    SEND_RESET_FLAG_REGISTER = 51,
-    SEND_ERROR_CODE = 52,
-    SET_THRESHOLD_VEXT_HIGH = 100,
-    SET_THRESHOLD_VEXT_LOW = 101,
-    SET_THRESHOLD_VINT_HIGH = 102,
-    SET_THRESHOLD_VINT_LOW = 103,
-    SET_THRESHOLD_TEMP_HIGH = 104,
-    SET_THRESHOLD_FAN_OFFTIME = 105,
-    SET_THRESHOLD_I2C_LASTCOMTIME = 106
+    SENDCONTAINER_MACHINE_STATE = 100,
+    SENDCONTAINER_SENSOR_DATA = 101,
+    SENDCONTAINER_THRESHOLDS = 102,
+    SEND_VEXT = 120,
+    SEND_VINT = 121,
+    SEND_TEMP = 122,
+    SEND_FAN1_FREQ = 130,
+    SEND_FAN1_SPAN = 131,
+    SEND_FAN1_OFFTIME = 132,
+    SEND_FAN2_FREQ = 140,
+    SEND_FAN2_SPAN = 141,
+    SEND_FAN2_OFFTIME = 142,
+    SEND_UPTIME = 150,
+    SEND_RESET_FLAG_REGISTER = 151,
+    SEND_ERROR_CODE = 152,
+    SET_THRESHOLD_VEXT_HIGH = 200,
+    SET_THRESHOLD_VEXT_LOW = 201,
+    SET_THRESHOLD_VINT_HIGH = 202,
+    SET_THRESHOLD_VINT_LOW = 203,
+    SET_THRESHOLD_TEMP_HIGH = 204,
+    SET_THRESHOLD_FAN_OFFTIME = 205,
+    SET_THRESHOLD_I2C_LASTCOMTIME = 206
 } I2C_COMMAND;
 
 
@@ -80,7 +80,6 @@ typedef struct __attribute__((__packed__)) {
     uint16_t TEMP_HIGH;         // Temperature [celsius / 100]
     uint16_t FAN_OFFTIME;       // Time since fan stopped, [seconds]
     uint16_t I2C_LASTCOMTIME;   // Time since last communication with master, [seconds]
-    //uint16_t _padding;
 } alarm_threshold_t;
 
 
@@ -154,9 +153,9 @@ __attribute__((__packed__)) {
 typedef struct __attribute__((__packed__)) {  
     /* Container data structure for the whole machine state */
 
-    volatile i2c_data_t i2c_data;
-    volatile alarm_threshold_t threshold;
     volatile measurements_t sensor_data;
+    volatile alarm_threshold_t threshold;
+    volatile i2c_data_t i2c_data;
     uint8_t error_code_has_changed;
     uint8_t reset_flag_register;
     buzzer_state_t buzzer_state;

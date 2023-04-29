@@ -131,7 +131,7 @@ namespace test {
     void readWholeMachineState(void) {
         Serial.println("[Running test]: ");
 
-        sendCommand(10, 0); // Command 'machine_state' to be sent
+        sendCommand(100, 0); // Command 'machine_state' to be sent
         requestMachineState();
         printMachineState();
         printBuffer(PACKET_SIZE);
@@ -142,7 +142,7 @@ namespace test {
         Serial.println("[Running test]: readTemperature");
 
         for (auto i = 0; i<3; i++) {
-            sendCommand(22, 0);
+            sendCommand(122, 0);
             requestBytes(2);
         }
     }
@@ -150,7 +150,7 @@ namespace test {
     void readFreq(void) {
         Serial.println("[Running test]: readFreq");
 
-        sendCommand(30, 0);
+        sendCommand(130, 0);
         requestMachineState();
         Serial.printf("fan1_freq: \t%u\n", machine_state.sensor_data.fan1_freq);
 
@@ -162,15 +162,15 @@ namespace test {
         Serial.println("[Running test]: transmissionBufferMultiplexing");
 
         for (auto i = 0; i<3; i++) {
-            sendCommand(22, 0); // Command 'machine_state.sensor_data.temp' to be sent
+            sendCommand(122, 0); // Command 'machine_state.sensor_data.temp' to be sent
             requestBytes(52);   // Request 52 bytes and print
         }
         for (auto i = 0; i<3; i++) {
-            sendCommand(11, 0); // Command 'machine_state.sensor_data' to be sent
+            sendCommand(101, 0); // Command 'machine_state.sensor_data' to be sent
             requestBytes(52);   // Request 52 bytes and print
         }
         for (auto i = 0; i<3; i++) {
-            sendCommand(10, 0); // Command 'machine_state' to be sent
+            sendCommand(100, 0); // Command 'machine_state' to be sent
             requestBytes(52);   // Request 52 bytes and print
         }
     }
@@ -181,13 +181,13 @@ namespace test {
 
         for (auto i = 0; i < 1; i++) {
             sendCommand(0, 0);
-            sendCommand(100, val);
-            sendCommand(101, val);
-            sendCommand(102, val);
-            sendCommand(103, val);
-            sendCommand(104, val);
-            sendCommand(105, val);
-            sendCommand(106, val);
+            sendCommand(200, val);
+            sendCommand(201, val);
+            sendCommand(202, val);
+            sendCommand(203, val);
+            sendCommand(204, val);
+            sendCommand(205, val);
+            sendCommand(206, val);
         }
     }
 
@@ -197,13 +197,13 @@ namespace test {
 
         for (auto i = 0; i < 1; i++) {
             sendCommand(0, 0);
-            sendCommand(100, 12800);    // VEXT 12.8 [V] max
-            sendCommand(101, 10500);    // VEXT 10.5 [V] min
-            sendCommand(102, 5500);     // VINT 5.5 [V] max
-            sendCommand(103, 4300);     // VINT 4.3 [V] min
-            sendCommand(104, 9000);     // TEMP 90 [C] max
-            sendCommand(105, 1);        // fan off for 1 [s]
-            sendCommand(106, 10);       // last i2c communication, 10 [s] ago
+            sendCommand(200, 12800);    // VEXT 12.8 [V] max
+            sendCommand(201, 10500);    // VEXT 10.5 [V] min
+            sendCommand(202, 5500);     // VINT 5.5 [V] max
+            sendCommand(203, 4300);     // VINT 4.3 [V] min
+            sendCommand(204, 9000);     // TEMP 90 [C] max
+            sendCommand(205, 1);        // fan off for 1 [s]
+            sendCommand(206, 10);       // last i2c communication, 10 [s] ago
         }
     }
 
@@ -214,6 +214,26 @@ namespace test {
     void cmdSumAlarms(void) {
         sendCommand(5, 0);
     }
+
+    void cmdSaveThresholds(void) {
+        delay(2000);
+        sendCommand(0, 0);
+        sendCommand(5, 0);
+        test::setSaneDefaultThresholds();
+        test::setSaneDefaultThresholds();
+        test::setSaneDefaultThresholds();
+        test::setSaneDefaultThresholds();
+
+        test::readWholeMachineState();
+        test::cmdUsartDebugPrintOnce();
+
+        delay(2000);
+        sendCommand(0, 0);
+        sendCommand(7, 0);
+
+        delay(2000);
+        sendCommand(1, 0);
+    }
 }
 
 
@@ -223,6 +243,7 @@ void setup(void) {
     Wire.begin();   // Default SDA 21, SCL 22
     Serial.println("hello there");
     Serial.printf("'machine_state' size: %d\n\n", PACKET_SIZE);
+
 }
 
 void loop(void) {
@@ -235,14 +256,25 @@ void loop(void) {
     /*
     test::readFreq();
     test::cmdUsartDebugPrintOnce();
-    */
     test::setAllThresholds(0xffffffff);
     test::readWholeMachineState();
     test::cmdUsartDebugPrintOnce();
     delay(1000);
+    */
 
+/*
     test::setSaneDefaultThresholds();
+    test::setSaneDefaultThresholds();
+
     test::readWholeMachineState();
     test::cmdUsartDebugPrintOnce();
+
+    test::setSaneDefaultThresholds();
+    test::setSaneDefaultThresholds();
+    */
+
+    test::readWholeMachineState();
+    test::cmdUsartDebugPrintOnce();
+
 }
 
