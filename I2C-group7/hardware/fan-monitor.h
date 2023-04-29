@@ -6,10 +6,8 @@
  * fan/voltage monitoring system.
  *
  * pins and systems:
- *  PD1: Zero cross detection of AC coupled FAN 1, using TCB0
- *       through EVSYS channel 0
- *  PE3: Zero cross detection of AC coupled FAN 2, using TCB1
- *       through EVSYS channel 2
+ *   FAN1:  PE0-->AC0-->EVSYS0-->TCB0
+ *   FAN2:  PD3-->AC1-->EVSYS2-->TCB1
  *
  * board: AVR128DB48 Curiosity Nano
  *

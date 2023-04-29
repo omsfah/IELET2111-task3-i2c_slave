@@ -1,4 +1,5 @@
 #include "fan-monitor.h"
+#include "../lib/builtins.h"
 
 // We store values in buffers for two reasons
 //  1. We can filter high frequency noise by taking the mean
@@ -10,6 +11,14 @@ volatile uint16_t fan2_freq[FAN_MEAS_BUFFER_SIZE];
 volatile uint8_t fan1_buffer_index = 0;
 volatile uint8_t fan2_buffer_index = 0;
 
+
+ISR(AC0_AC_vect) {
+    AC0.STATUS = AC_CMPIF_bm;
+}
+
+ISR(AC1_AC_vect) {
+    AC1.STATUS = AC_CMPIF_bm;
+}
 
 ISR(TCB0_INT_vect) {
     /* ISR for FAN 1 frequency count event */
@@ -29,7 +38,6 @@ ISR(TCB0_INT_vect) {
     sei();  // Re-enable interrupts
 }
 
-
 ISR(TCB1_INT_vect) {
     /* ISR for FAN 2 frequency count event */
 
@@ -48,16 +56,27 @@ ISR(TCB1_INT_vect) {
     sei();  // Re-enable interrupts
 }
 
-
 void FAN_MONITOR_init(void) {
-    // For the two fans monitors, we use pins PD1 and PE3 which are
-    // hard-wired to ZCIN0 and ZCIN1.
-    PORTD.PIN1CTRL = PORT_ISC_INPUT_DISABLE_gc; // FAN 1
-    PORTE.PIN3CTRL = PORT_ISC_INPUT_DISABLE_gc; // FAN 2
+    /* Initialize monitoring for the two fans.
+     *   FAN1:  PE0-->AC0-->EVSYS0-->TCB0
+     *   FAN2:  PD3-->AC1-->EVSYS2-->TCB1
+     */
 
-    // Enable zero cross detectors 0 and 1
-    ZCD0.CTRLA |= ZCD_ENABLE_bm | ZCD_OUTEN_bm;
-    ZCD1.CTRLA |= ZCD_ENABLE_bm | ZCD_OUTEN_bm;
+    // Pin init
+    PORTE.PIN0CTRL = PORT_ISC_INPUT_DISABLE_gc;
+    PORTD.PIN3CTRL = PORT_ISC_INPUT_DISABLE_gc;
+
+    // Initialize analog comparator AC0
+    AC0.DACREF = 0;
+    AC0.INTCTRL = AC_INTMODE_NORMAL_POSEDGE_gc | AC_CMP_bm;
+    AC0.MUXCTRL = AC_MUXPOS_AINP1_gc | AC_MUXNEG_DACREF_gc;
+    AC0.CTRLA = AC_ENABLE_bm;   // hystmode?
+
+    // Initialize analog comparator AC1
+    AC1.DACREF = 0;
+    AC1.INTCTRL = AC_INTMODE_NORMAL_POSEDGE_gc | AC_CMP_bm;
+    AC1.MUXCTRL = AC_MUXPOS_AINP1_gc | AC_MUXNEG_DACREF_gc;
+    AC1.CTRLA = AC_ENABLE_bm;   // hystmode?
 
     // Set up the TCB0 timer for FAN 1
     TCB0.CTRLB = TCB_CNTMODE_FRQ_gc;    // Input capture freqency
@@ -73,13 +92,10 @@ void FAN_MONITOR_init(void) {
     TCB0.CTRLA = TCB_ENABLE_bm | TCB_RUNSTDBY_bm;
     TCB1.CTRLA = TCB_ENABLE_bm | TCB_RUNSTDBY_bm;
 
-    // Set up event system to link the zero cross detectors to timers
-    EVSYS.CHANNEL0 = EVSYS_CHANNEL0_ZCD0_gc; // Link ZCD0 to event channel 0
-    EVSYS.CHANNEL2 = EVSYS_CHANNEL2_ZCD1_gc; // Link ZCD1 to event channel 2
+    EVSYS.CHANNEL0 = EVSYS_CHANNEL0_AC0_OUT_gc; // Link AC0 to event channel 0
+    EVSYS.CHANNEL2 = EVSYS_CHANNEL2_AC1_OUT_gc; // Link AC1 to event channel 2
     EVSYS.USERTCB0CAPT = EVSYS_CHANNEL00_bm; // Link TCB0 to event channel 0
     EVSYS.USERTCB1CAPT = EVSYS_CHANNEL02_bm; // Link TCB1 to event channel 2
-
-    sei();
 }
 
 uint16_t FAN_MONITOR_1_readSpan(void) {

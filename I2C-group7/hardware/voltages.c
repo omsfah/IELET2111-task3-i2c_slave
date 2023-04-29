@@ -18,7 +18,7 @@ uint16_t VEXT_read(void) {
 	double R2 = 46150.0;
 	double R1 = 220600.0;
 
-	double volt_val = ADC0_readVoltage(PORT_D, 3);
+	double volt_val = ADC0_readVoltage(PORT_D, 1);
 	uint16_t vext = scaleVoltage(volt_val, R1, R2) * 1000;	// [millivolt]
 
 	return vext;
@@ -33,3 +33,4 @@ uint16_t VINT_read(void) {
 
 	return vint;
 }
+
