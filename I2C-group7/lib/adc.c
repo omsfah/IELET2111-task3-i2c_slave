@@ -31,9 +31,12 @@ void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode) {
             break;
     }
     
-    ADC0.CTRLC = ADC_PRESC_DIV4_gc; //Set ADC Clock to 1MHZ
-    ADC0.CTRLA = ADC_ENABLE_bm | ADC_RESSEL_10BIT_gc; //Enable ADC and set it to 10-bit mode
-    VREF.ADC0REF = VREF_REFSEL_VDD_gc; //Set Vref on AC to VDD (3.3V)
+    if (ADC0.CTRLA != ADC_ENABLE_bm | ADC_RESSEL_10BIT_gc)
+    {    
+        ADC0.CTRLC = ADC_PRESC_DIV4_gc; //Set ADC Clock to 1MHZ
+        ADC0.CTRLA = ADC_ENABLE_bm | ADC_RESSEL_10BIT_gc; //Enable ADC and set it to 10-bit mode
+        VREF.ADC0REF = VREF_REFSEL_VDD_gc; //Set Vref on AC to VDD (3.3V)
+    }
     
     switch (adc_mode) {
         case SINGLE_CONVERSION_MODE:
