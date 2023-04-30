@@ -1,5 +1,6 @@
 #include "fan-monitor.h"
-#include "../lib/builtins.h"
+
+
 
 // We store values in buffers for two reasons
 //  1. We can filter high frequency noise by taking the mean

@@ -159,11 +159,11 @@ typedef struct __attribute__((__packed__)) {
     volatile measurements_t sensor_data;
     volatile alarm_threshold_t threshold;
     volatile i2c_data_t i2c_data;
-    uint8_t error_code_has_changed;
-    uint8_t reset_flag_register;
-    buzzer_state_t buzzer_state;
-    error_code_t error_code;
-    uint8_t machine_state_size;
+    volatile uint8_t error_code_has_changed;
+    volatile uint8_t reset_flag_register;
+    volatile buzzer_state_t buzzer_state;
+    volatile error_code_t error_code;
+    volatile uint8_t machine_state_size;
 } machine_state_t;
 
 

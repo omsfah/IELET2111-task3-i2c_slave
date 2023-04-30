@@ -23,6 +23,7 @@
 #include "../lib/twi.h"
 #include "logging.h"
 
+static inline void I2C_parseCommand(void);
 void I2C_init(twi_address_t I2C_address);
 void I2C_setAddress(twi_address_t I2C_address);
 void I2C_SYSTEM_update();

@@ -18,14 +18,13 @@ volatile uint8_t receive_buffer[RECEIVE_BUFFER_SIZE];
 volatile uint32_t last_i2c_contact_time = 0;
 
 
-
 twi_receive_callback_t onReceive(uint8_t data) {
     /* Routine for every time we receive a byte on the I2C bus */
 
     if (receive_buffer_index == RECEIVE_BUFFER_SIZE-1) {
         // When the receive buffer is full, we call the command
         // parser to decide what to do with the data
-        I2C_parseCommand(receive_buffer[0]);
+        I2C_parseCommand();
 
         // After parsing the received command, we empty the receive buffer
         memset(&receive_buffer, 0, RECEIVE_BUFFER_SIZE);
@@ -107,18 +106,22 @@ static void printBothBuffers(void) {
     printf("size: %d", machine_state.machine_state_size);
 }
 
+static inline uint8_t CMD_FROM_RECV(void) {
+    /* Get the command from the receive buffer */
+    return receive_buffer[0];
+}
 
-static uint8_t U8_FROM_RECV(void) {
+static inline uint8_t U8_FROM_RECV(void) {
     /* Cast the received value as uint8_t */
     return receive_buffer[4];
 }
 
-static uint16_t U16_FROM_RECV(void) {
+static inline uint16_t U16_FROM_RECV(void) {
     /* Cast the received value as uint16_t */
     return receive_buffer[4] + (receive_buffer[3]<<8);
 }
 
-static uint32_t U32_FROM_RECV(void) {
+static inline uint32_t U32_FROM_RECV(void) {
     /* Cast the received value as uint32_t */
     return receive_buffer[4] + (receive_buffer[3]<<8) + (receive_buffer[2]<<16) + (receive_buffer[1]<<24);
 }
@@ -135,7 +138,7 @@ static uint32_t U32_FROM_RECV(void) {
 }
 
 
-static void I2C_parseCommand(I2C_COMMAND command) {
+static inline void I2C_parseCommand(void) {
     /* This function takes a command received from the
      * I2C controller and does either of:
      *
@@ -150,6 +153,8 @@ static void I2C_parseCommand(I2C_COMMAND command) {
      */
 
     cli();  // Disable interrupts while we parse the command
+
+    uint8_t command = CMD_FROM_RECV();
 
     switch (command) {
         // Command series 0-99: Direct control of target
