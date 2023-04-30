@@ -1,7 +1,7 @@
 /*
  *  rtc.h
  *
- *  AVR abstractions real time counter (RTC)
+ *  AVR abstractions for real time counter (RTC)
  *
  *  board: AVR128DB48 Curiosity Nano
  *

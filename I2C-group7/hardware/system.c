@@ -1,10 +1,12 @@
 #include "system.h"
 
-// Here we instantiate the global machine state data structure
+/* Here we instantiate the global machine state data structure */
 machine_state_t machine_state;
 
 
 void SYSTEMS_init(void) {
+    /* Main initialization procedure, ran at startup in 'main.c' */
+
     BUTTON_BUILTIN_init();
     LED_BUILTIN_init();
     DIP4_init();
@@ -13,16 +15,17 @@ void SYSTEMS_init(void) {
     RTC_UPTIME_COUNTER_init();
 
     USART3_init();
-    stdout = &USART3_stream;    // Move to usart.h if possible
+    stdout = &USART3_stream;
 
     // Generic ADC initializations
     ADC0_init(PORT_D, 1, SINGLE_CONVERSION_MODE);   // VEXT (External 12V supply)
     ADC0_init(PORT_D, 2, SINGLE_CONVERSION_MODE);   // VINT (Internal 5V supply)
     ADC0_init(PORT_F, 4, SINGLE_CONVERSION_MODE);   // TEMP (thermistor)
 
-    // Init brownout detection
-    // Init watchdog
+    // TODO: Init brownout detection
+    // TODO: Init watchdog
 }
+
 
 void MACHINE_STATE_init(void) {
     /* This function is ran once on startup to initialize values
@@ -35,26 +38,6 @@ void MACHINE_STATE_init(void) {
     machine_state.machine_state_size = sizeof(machine_state);
 }
 
-void development_testing(void) {
-    // While developing, we can test subsystems here
-
-    /*
-    printf("\n");
-    printf("I2C: %d, ", machine_state.i2c_data.address);
-    printf("size: %d, ", machine_state.machine_state_size);
-    // Testing fan monitor library
-    printf("FAN1 freq: %d, ", machine_state.sensor_data.fan1_freq);
-    printf("span: %d, ", machine_state.sensor_data.fan1_span);
-    printf("FAN2 freq: %d, ", machine_state.sensor_data.fan2_freq);
-    printf("span: %d, ", machine_state.sensor_data.fan2_span);
-    printf("\n");
-    */
-
-    //SEVEN_SEGMENT_showNumber(machine_state.sensor_data.dip_switch);
-
-    //LED_BUILTIN_toggle();
-    //_delay_ms(500);
-}
 
 void MACHINE_STATE_update(void) {
     /* Update 'machine_state' with new readings */
@@ -81,9 +64,8 @@ void MACHINE_STATE_update(void) {
 
     // Sample the reset flag register
     machine_state.reset_flag_register = RSTCTRL.RSTFR;
-
-    development_testing();
 }
+
 
 void ALARM_SYSTEM_update(void) {
     /* Based on the current 'machine_state', decide
@@ -139,8 +121,11 @@ void ALARM_SYSTEM_update(void) {
         machine_state.error_code = ALARM_VINT_LOW;
         machine_state.buzzer_state = BUZZER_CONSTANT_ON;
     }
-    // TODO:
-    // ALARM_I2C_NOCONTACT
+    // 8: checking if I2C communcation with controller has seized for too long
+    if (machine_state.i2c_data.last_contact > machine_state.threshold.I2C_LASTCOMTIME) {
+        machine_state.error_code = ALARM_I2C_NOCONTACT;
+        machine_state.buzzer_state = BUZZER_CONSTANT_ON;
+    }
 
     // If builtin button (PB2) was pushed, we sum (disable) the alarm sound
     if (machine_state.sensor_data.button_builtin == 1) {
@@ -153,8 +138,8 @@ void ALARM_SYSTEM_update(void) {
                                         | RSTCTRL_SWRF_bm | RSTCTRL_UPDIRF_bm;
     }
 
-    // Write error code to the seven segment display
-    //if (machine_state.error_code_has_changed)
+    // Finally we write error code to the seven segment display
+    // TODO: if (machine_state.error_code_has_changed)
     SEVEN_SEGMENT_showNumber(machine_state.error_code);
 }
 

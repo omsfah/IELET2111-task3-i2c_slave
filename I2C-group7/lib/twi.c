@@ -157,7 +157,7 @@ ISR(TWI0_TWIS_vect) {
 }
 
 
-static void TWI0_CONTROLLER_init(void) {
+void TWI0_CONTROLLER_init(void) {
     /* Initialize device as TWI controller */
 
     TWI0_busInit();

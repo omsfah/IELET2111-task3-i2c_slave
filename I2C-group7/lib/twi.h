@@ -75,11 +75,4 @@ static void TWI0_CONTROLLER_init(void);
  */
 void TWI0_CONTROLLER_sendByte(twi_address_t twi_address, uint8_t byte);
 
-
-/**************** function TWI0_wait
- * @brief While TWI bus is not ready or is reporting errors, wait forever
- */
-static void TWI0_wait(void);
-
-
 #endif

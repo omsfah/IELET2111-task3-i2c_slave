@@ -1,8 +1,10 @@
 /*
  * voltages.h
  *
- * Created: 27/04/2023 12:38:47
- *  Author: NTNU
+ * Functions for reading voltages.
+ * Implementation is specific to the fan/voltage monitoring system.
+ *
+ * board: AVR128DB48 Curiosity Nano
  */ 
 
 
@@ -13,7 +15,7 @@
 
 #include "../lib/adc.h"
 
-double scaleVoltage(double voltVal, double R1, double R2);
+
 uint16_t VEXT_read(void);
 uint16_t VINT_read(void);
 

@@ -1,6 +1,10 @@
 #include "seven-segment.h"
 
 
+/* These inline functions set the different segments of
+ * the display high. If the pins are to be changed, they
+ * can be done here.
+ */
 static inline void TOP(void) {PORTD.OUTSET |= PIN5_bm;}
 static inline void UL(void)  {PORTD.OUTSET |= PIN6_bm;}
 static inline void UR(void)  {PORTD.OUTSET |= PIN4_bm;}

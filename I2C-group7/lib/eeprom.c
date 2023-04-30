@@ -1,7 +1,6 @@
 #include "eeprom.h"
 
 
-
 void eepromWrite(uint16_t addr, void* input, uint16_t len) {
     /* Write an array to EEPROM by repeated calls to the
      * avr 'eeprom_write_byte' function

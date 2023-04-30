@@ -8,12 +8,15 @@
  *
  */
 
+/* Instantiations of buffers and buffer indexes used within this file */
 volatile uint8_t transmission_buffer_index = 0;
 volatile uint8_t receive_buffer_index = 0;
 volatile uint8_t transmission_buffer[TRANSMISSION_BUFFER_SIZE];
 volatile uint8_t receive_buffer[RECEIVE_BUFFER_SIZE];
 
+/* Instantiation of I2C status variables */
 volatile uint32_t last_i2c_contact_time = 0;
+
 
 
 twi_receive_callback_t onReceive(uint8_t data) {
@@ -79,7 +82,7 @@ void I2C_setAddress(twi_address_t I2C_address) {
     TWI0_TARGET_updateAddress(I2C_address);
 }
 
-void printRegister(uint8_t array[], uint8_t len) {
+static void printRegister(uint8_t array[], uint8_t len) {
     /* Print the array in HEX coding, 4 bytes at a time */
     static const group_by = 4;
 
@@ -92,8 +95,9 @@ void printRegister(uint8_t array[], uint8_t len) {
 }
 
 
-void printBothBuffers(void) {
-    // Development printing
+static void printBothBuffers(void) {
+    /* Pretty printing of I2C buffers to stdout */
+
     printf("\n");
     printf("trans: ");
     printRegister(transmission_buffer, TRANSMISSION_BUFFER_SIZE);
@@ -104,17 +108,17 @@ void printBothBuffers(void) {
 }
 
 
-uint8_t U8_FROM_RECV(void) {
+static uint8_t U8_FROM_RECV(void) {
     /* Cast the received value as uint8_t */
     return receive_buffer[4];
 }
 
-uint16_t U16_FROM_RECV(void) {
+static uint16_t U16_FROM_RECV(void) {
     /* Cast the received value as uint16_t */
     return receive_buffer[4] + (receive_buffer[3]<<8);
 }
 
-uint32_t U32_FROM_RECV(void) {
+static uint32_t U32_FROM_RECV(void) {
     /* Cast the received value as uint32_t */
     return receive_buffer[4] + (receive_buffer[3]<<8) + (receive_buffer[2]<<16) + (receive_buffer[1]<<24);
 }
@@ -130,10 +134,8 @@ uint32_t U32_FROM_RECV(void) {
     memcpy(transmission_buffer, &x, sizeof(x)); \
 }
 
-//memset(transmission_buffer, 0, TRANSMISSION_BUFFER_SIZE); \
-    
 
-void I2C_parseCommand(I2C_COMMAND command) {
+static void I2C_parseCommand(I2C_COMMAND command) {
     /* This function takes a command received from the
      * I2C controller and does either of:
      *

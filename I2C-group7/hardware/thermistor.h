@@ -1,8 +1,11 @@
 /*
- * Thermistor.h
+ * thermistor.h
  *
- * Created: 25/04/2023 09:28:23
- *  Author: NTNU
+ * Read temperature from NTC thermistor.
+ * Implementation is specific to the fan/voltage monitoring system.
+ *
+ * board: AVR128DB48 Curiosity Nano
+ *
  */ 
 
 
@@ -14,7 +17,6 @@
 
 #include "../lib/adc.h"
 
-long double ntc_conversion(double voltVal);
 uint16_t THERMISTOR_read(void);
 
 #endif /* THERMISTOR_H_ */
