@@ -1,0 +1,69 @@
+image: python:latest
+
+stages:
+  - diffs
+  - tests
+  - export
+
+before_script:
+  - git clone --depth 1 https://gitlab.com/kicad/libraries/kicad-library-utils $CI_BUILDS_DIR/kicad-library-utils
+  - git config --global --add safe.directory $(realpath .)
+
+klc-check:
+  stage: tests
+  only:
+    refs:
+      - merge_requests
+    changes:
+      - "*.kicad_sym"
+      - "sym-lib-table"
+  script:
+    - python3 -V
+    - pip install pytest
+    - $CI_BUILDS_DIR/kicad-library-utils/tools/gitlabci/check_symbols.sh
+
+  artifacts:
+    reports:
+      metrics: metrics.txt
+
+visual_diff:
+  stage: diffs
+  image: kicad/kicad:nightly
+  only:
+    refs:
+      - merge_requests
+    changes:
+      - "*.kicad_sym"
+  script:
+    - mkdir -p $HOME/.config/kicad/7.0/colors
+    - sudo apt update -qq
+    - sudo apt install curl python3 python3-pip -qqy --no-install-recommends
+    - python3 -V
+    - pip install --break-system-packages pygments wsdiff jinja2
+    - $CI_BUILDS_DIR/kicad-library-utils/tools/gitlabci/visual_diff.sh
+    - mkdir diffs
+    - mv *.diff diffs/
+  artifacts:
+    expose_as: "Visual Diff"
+    paths:
+      - "diffs/"
+
+nightly-convert:
+  stage: export
+  image: kicad/kicad:nightly
+  only:
+    - schedules
+  before_script:
+    - sudo apt update -q && sudo apt install -qqy git
+    - git config --global "http.${CI_SERVER_URL}.sslCAInfo" "$CI_SERVER_TLS_CA_FILE"
+    - git clone --depth 1 https://gitlab.com/kicad/libraries/kicad-library-utils $CI_BUILDS_DIR/kicad-library-utils
+  script:
+    - export LIB_NAME_MASK="*.kicad_sym" LIB_TYPE=sym LIB_DEST="$CI_BUILDS_DIR/libraries" LIB_REMOTE_BRANCH=nightly-rolling
+    - git clone --branch $LIB_REMOTE_BRANCH --depth 1 "https://token:$GITLAB_ACCESS_TOKEN@gitlab.com/kicad/libraries/kicad-symbols.git" $CI_BUILDS_DIR/libraries
+    - mkdir -p $HOME/.config/kicad/7.0/colors
+    - $CI_BUILDS_DIR/kicad-library-utils/scripts/migrate_libraries.sh
+    - cd $CI_BUILDS_DIR/libraries/
+    - git config user.name "CI Pipeline"
+    - git config user.email "cipipeline@noreply.kicad.org"
+    - git add -A && git commit -m "Update to master ${CI_COMMIT_SHA:0:12}"
+    - git push origin HEAD:$LIB_REMOTE_BRANCH

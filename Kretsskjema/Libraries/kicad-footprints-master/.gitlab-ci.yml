@@ -1,0 +1,95 @@
+image: python:latest
+
+stages:
+  - test
+  - screenshot
+  - diffs
+  - convert
+
+before_script:
+  - git clone --depth 1 https://gitlab.com/kicad/libraries/kicad-library-utils $CI_BUILDS_DIR/kicad-library-utils
+  - git config --global --add safe.directory $(realpath .)
+
+klc-check:
+  stage: test
+  allow_failure: true
+  only:
+    refs:
+      - merge_requests
+    changes:
+      - "**/*.kicad_mod"
+      - "fp-lib-table"
+  script:
+    - $CI_BUILDS_DIR/kicad-library-utils/tools/gitlabci/check_footprints.sh
+  artifacts:
+    reports:
+      metrics: metrics.txt
+
+nightly-convert:
+  image: kicad/kicad:nightly
+  stage: convert
+  only:
+    - schedules
+  before_script:
+    - sudo apt update -q && sudo apt install -qqy git
+    - git config --global "http.${CI_SERVER_URL}.sslCAInfo" "$CI_SERVER_TLS_CA_FILE"
+    - git clone --depth 1 https://gitlab.com/kicad/libraries/kicad-library-utils $CI_BUILDS_DIR/kicad-library-utils
+  script:
+    - find . -name "*.kicad_mod" -exec sed -i 's/\${KICAD6_3DMODEL_DIR}/\${KICAD7_3DMODEL_DIR}/g' {} \;
+    - export LIB_NAME_MASK="*.pretty" LIB_TYPE=fp LIB_DEST="$CI_BUILDS_DIR/libraries" LIB_REMOTE_BRANCH=nightly-rolling
+    - git clone --branch $LIB_REMOTE_BRANCH --depth 1 "https://token:$GITLAB_ACCESS_TOKEN@gitlab.com/kicad/libraries/kicad-footprints.git" $CI_BUILDS_DIR/libraries
+    - mkdir -p $HOME/.config/kicad/7.0/colors
+    - $CI_BUILDS_DIR/kicad-library-utils/scripts/migrate_libraries.sh
+    - cd $CI_BUILDS_DIR/libraries/
+    - git config user.name "CI Pipeline"
+    - git config user.email "cipipeline@noreply.kicad.org"
+    - git add -A && git commit -m "Update to master ${CI_COMMIT_SHA:0:12}"
+    - git push origin HEAD:$LIB_REMOTE_BRANCH
+
+screenshot:
+  image: kicad/kicad:nightly
+  stage: screenshot
+  allow_failure: true
+  only:
+    refs:
+      - merge_requests
+    changes:
+      - "**/*.kicad_mod"
+  before_script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - sudo ln -sf $(which kicad-cli) /usr/bin/kicad-cli-nightly
+    - sudo apt update -qq
+    - sudo apt install curl inkscape python3 git -qqy --no-install-recommends
+    - mkdir -p $HOME/.config/kicad/7.0/colors
+    - git clone --depth 1 https://gitlab.com/kicad/libraries/kicad-library-utils $CI_BUILDS_DIR/kicad-library-utils
+    - git config --global --add safe.directory $(realpath .)
+  script:
+    - $CI_BUILDS_DIR/kicad-library-utils/tools/gitlabci/screenshot_footprints.sh
+  artifacts:
+    expose_as: 'Screenshots'
+    paths:
+      - screenshots/
+
+visual_diff:
+  stage: diffs
+  image: kicad/kicad:nightly
+  only:
+    refs:
+      - merge_requests
+    changes:
+      - "**/*.kicad_mod"
+  script:
+    - mkdir -p $HOME/.config/kicad/7.0/colors
+    - sudo apt update -qq
+    - sudo apt install curl python3 python3-pip -qqy --no-install-recommends
+    - python3 -V
+    - pip install --break-system-packages pygments wsdiff jinja2
+    - $CI_BUILDS_DIR/kicad-library-utils/tools/gitlabci/visual_diff.sh
+    - mkdir diffs
+    - mv *.diff diffs/
+  artifacts:
+    expose_as: "Visual Diff"
+    paths:
+      - "diffs/"
+  dependencies:
+    - screenshot
