@@ -5,7 +5,8 @@
  * the I2C target fan/voltage monitoring system.
  *
  * board: AVR128DB48 Curiosity Nano
- *
+ * project: IELET2111, oppgave 3: 'I2C-slave for monitorering'.
+ * authors: Gruppe 7, BIELEKTRO NTNU, Trondheim. Våren 2023
  */
 
 #ifndef PROTOCOL_I2C_H_

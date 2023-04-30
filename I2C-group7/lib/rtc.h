@@ -1,10 +1,11 @@
 /*
- *  rtc.h
+ * rtc.h
  *
- *  AVR abstractions for real time counter (RTC)
+ * AVR abstractions for real time counter (RTC)
  *
- *  board: AVR128DB48 Curiosity Nano
- *
+ * board: AVR128DB48 Curiosity Nano
+ * project: IELET2111, oppgave 3: 'I2C-slave for monitorering'.
+ * authors: Gruppe 7, BIELEKTRO NTNU, Trondheim. Våren 2023
  */
 
 #ifndef RTC_H_

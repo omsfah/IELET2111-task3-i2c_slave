@@ -12,7 +12,8 @@
  * changes to the data containers.
  *
  * board: AVR128DB48 Curiosity Nano, ESP32
- *
+ * project: IELET2111, oppgave 3: 'I2C-slave for monitorering'.
+ * authors: Gruppe 7, BIELEKTRO NTNU, Trondheim. Våren 2023
  */
 
 #ifndef DATASTRUCTURE_H_

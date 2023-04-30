@@ -3,8 +3,9 @@
  *
  *  AVR abstractions for built in LED (PB2) and push button (PB3)
  *
- *  board: AVR128DB48 Curiosity Nano
- *
+ * board: AVR128DB48 Curiosity Nano
+ * project: IELET2111, oppgave 3: 'I2C-slave for monitorering'.
+ * authors: Gruppe 7, BIELEKTRO NTNU, Trondheim. Våren 2023
  */
 
 #ifndef BUILTINS_H_

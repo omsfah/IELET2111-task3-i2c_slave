@@ -10,7 +10,8 @@
  *   FAN2:  PD3-->AC1-->EVSYS2-->TCB1
  *
  * board: AVR128DB48 Curiosity Nano
- *
+ * project: IELET2111, oppgave 3: 'I2C-slave for monitorering'.
+ * authors: Gruppe 7, BIELEKTRO NTNU, Trondheim. Våren 2023
  */
 
 #ifndef FAN_MONITOR_H_

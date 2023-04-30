@@ -3,18 +3,17 @@
  *
  * Main entry point for I2C target fan/voltage monitor.
  *
- * Project for the subject IELET2111 Mikrokontrollerprogrammering.
+ * Project for the subject IELET2111 Mikrokontrollersystemer.
  *  - Olaf Andreas Hafsmo
  *  - Gunnar Myhre
  *  - Daniel Thauland
  * Spring 2023. NTNU, Trondheim
  *
  * board: AVR128DB48 Curiosity Nano
+ * project: IELET2111, oppgave 3: 'I2C-slave for monitorering'.
+ * authors: Gruppe 7, BIELEKTRO NTNU, Trondheim. Våren 2023
+ *
  */
-
-// File structure:
-// lib for functions and declarations
-// hardware for initializing hardware components
 
 #include "configuration.h"
 #include "hardware/system.h"
@@ -30,7 +29,7 @@ int main(void) {
 
 
     for (;;) {
-        /* We loop forever, updating the machine_state
+        /* We loop forever, updating the 'machine_state'
          * data structure with sensor data for every
          * loop iteration. On the I2C controllers
          * request, we transmit the data.
