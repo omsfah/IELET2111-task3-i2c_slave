@@ -79,7 +79,6 @@ void I2C_setAddress(twi_address_t I2C_address) {
     TWI0_TARGET_updateAddress(I2C_address);
 }
 
-
 void printRegister(uint8_t array[], uint8_t len) {
     /* Print the array in HEX coding, 4 bytes at a time */
     static const group_by = 4;
@@ -181,6 +180,14 @@ void I2C_parseCommand(I2C_COMMAND command) {
 
         case LOAD_THRESHOLDS_FROM_EEPROM:
             eepromRead(THRESHOLDS_EEPROM_ADDR, &machine_state.threshold, sizeof(machine_state.threshold));
+        break;
+
+        case ENABLE_I2C_PULLUPS:
+            TWI0_enableBusPullups();
+        break;
+
+        case DISABLE_I2C_PULLUPS:
+            TWI0_disableBusPullups();
         break;
 
         case FACTORY_RESET:

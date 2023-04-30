@@ -47,7 +47,15 @@ void TWI_TARGET_registerStopCallback(twi_stop_callback_t function);
 
 /**************** TODO: docstring
  */
-void TWI0_TARGET_init(twi_address_t target_address);
+void TWI0_disableBusPullups(void);
+
+/**************** TODO: docstring
+ */
+void TWI0_disableBusPullups(void);
+
+/**************** TODO: docstring
+ */
+void TWI0_TARGET_updateAddress(twi_address_t target_address);
 
 
 /**************** TODO: docstring

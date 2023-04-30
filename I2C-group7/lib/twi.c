@@ -32,6 +32,16 @@ static void TWI0_busInit(void) {
     TWI0.CTRLA &= ~TWI_FMPEN_bm;    // Disable fast mode
 }
 
+void TWI0_enableBusPullups(void) {
+    PORTA.PINCONFIG = PORT_PULLUPEN_bm;
+    PORTA.PINCTRLUPD = PIN2_bm | PIN3_bm;
+}
+
+void TWI0_disableBusPullups(void) {
+    PORTA.PINCONFIG &= ~PORT_PULLUPEN_bm;
+    PORTA.PINCTRLUPD = PIN2_bm | PIN3_bm;
+}
+
 void TWI0_TARGET_updateAddress(twi_address_t target_address) {
     /* Update target address */
     TWI0.SADDR = target_address << 1;
