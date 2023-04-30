@@ -22,6 +22,9 @@ void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode) {
 			_SFR_MEM8(0x0490+pin) &= ~PORT_PULLUPEN_bm;
 			break;
 		case PORT_F:
+			if (pin > 3) {
+				break;
+			}
 			_SFR_MEM8(0x04B0+pin) &= ~PORT_ISC_gm;
 			_SFR_MEM8(0x04B0+pin) |= PORT_ISC_INPUT_DISABLE_gc;
 			_SFR_MEM8(0x04B0+pin) &= ~PORT_PULLUPEN_bm;
