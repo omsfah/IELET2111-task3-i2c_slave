@@ -19,12 +19,21 @@ static const uint8_t TARGET_I2C_ADDRESS = 104;
 static const uint8_t PACKET_SIZE = sizeof(machine_state);
 
 uint8_t data_buffer[PACKET_SIZE] = {0};
+uint8_t data_buffer2[PACKET_SIZE] = {0};
 
 
 void printBuffer(uint8_t bytes) {
     /* Print the received data over USART */
     for (auto i = 0; i < bytes; i++) {
         Serial.printf("%02X", data_buffer[i]);
+        if ((i+1) % 4 == 0) Serial.println();
+    }
+    Serial.println();
+}
+void printBuffer2(uint8_t bytes) {
+    /* Print the received data over USART */
+    for (auto i = 0; i < bytes; i++) {
+        Serial.printf("%02X", data_buffer2[i]);
         if ((i+1) % 4 == 0) Serial.println();
     }
     Serial.println();
@@ -119,6 +128,7 @@ void requestMachineState(void) {
     uint8_t bytes_received = Wire.requestFrom(TARGET_I2C_ADDRESS, PACKET_SIZE);
     Serial.printf("received %u bytes\n", bytes_received);
     Wire.readBytes(data_buffer, bytes_received);    // Move data into buffer
+    memset(&machine_state, 0, PACKET_SIZE);
     memcpy(&machine_state, data_buffer, PACKET_SIZE);
     uint8_t i2c_send_result = Wire.endTransmission(true);
     Serial.printf("endTransmission: %u\n", i2c_send_result);
@@ -275,6 +285,7 @@ void loop(void) {
 
     test::readWholeMachineState();
     test::cmdUsartDebugPrintOnce();
-
+    memcpy(data_buffer2, &machine_state, PACKET_SIZE);
+    printBuffer2(PACKET_SIZE);
 }
 

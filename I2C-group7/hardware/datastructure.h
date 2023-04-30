@@ -19,8 +19,8 @@
 #define DATASTRUCTURE_H_
 
 #ifdef __cplusplus
-extern "C" {
 #pragma pack(1)
+extern "C" {
 #endif
 
 typedef enum {
