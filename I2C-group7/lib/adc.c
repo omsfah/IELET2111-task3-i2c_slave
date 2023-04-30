@@ -10,6 +10,9 @@ void ADC0_init(PORT_SELECT port, uint8_t pin, ADC_MODE adc_mode) {
     
     uses memory positions for easier parametric manipulation
     */
+    if (pin>7) {
+        return;
+    }
     switch(port) {
         case PORT_D:
             _SFR_MEM8(0x0470+pin) &= ~PORT_ISC_gm;
