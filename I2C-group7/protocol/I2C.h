@@ -12,9 +12,6 @@
 #ifndef PROTOCOL_I2C_H_
 #define PROTOCOL_I2C_H_
 
-#define TRANSMISSION_BUFFER_SIZE 48
-#define RECEIVE_BUFFER_SIZE 5
-
 #include <avr/io.h>
 
 #include "../hardware/system.h"
@@ -26,6 +23,6 @@
 static inline void I2C_parseCommand(void);
 void I2C_init(twi_address_t I2C_address);
 void I2C_setAddress(twi_address_t I2C_address);
-void I2C_SYSTEM_update();
+void I2C_SYSTEM_update(void);
 
 #endif

@@ -10,15 +10,12 @@
  * Spring 2023. NTNU, Trondheim
  *
  * board: AVR128DB48 Curiosity Nano
- * project: IELET2111, oppgave 3: 'I2C-slave for monitorering'.
- * authors: Gruppe 7, BIELEKTRO NTNU, Trondheim. Våren 2023
  */
 
 #include "configuration.h"
-#include "hardware/system.h"
 
+#include "hardware/system.h"
 #include "protocol/I2C.h"
-#include "protocol/logging.h"
 
 
 int main(void) {

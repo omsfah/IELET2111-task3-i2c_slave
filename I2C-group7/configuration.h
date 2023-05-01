@@ -20,7 +20,7 @@
 #define THRESHOLDS_EEPROM_ADDR 0x0
 
 // Debug printing config
-//#define ENABLE_DEBUG_PRINT_TO_USART3
+#define ENABLE_DEBUG_PRINT_TO_USART3
 
 // Factory settings for the alarm thresholds
 #define FACTORY_VEXT_HIGH       12800
@@ -30,3 +30,8 @@
 #define FACTORY_TEMP_HIGH       9000
 #define FACTORY_FAN_OFFTIME     1
 #define FACTORY_I2C_LASTCOMTIME 10
+
+// Settings for the I2C buffer internals
+#define TRANSMISSION_BUFFER_SIZE 48
+#define RECEIVE_BUFFER_SIZE 5
+
